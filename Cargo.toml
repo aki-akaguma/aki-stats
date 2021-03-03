@@ -1,0 +1,55 @@
+[package]
+name = "aki-stats"
+version = "0.1.0"
+authors = ["aki <aki.akaguma@hotmail.com>"]
+description = """
+output the statistics of text, like a wc of linux command.
+"""
+keywords = ["text", "filter"]
+categories = ["command-line-utilities", "text-processing"]
+license = "MIT OR Apache-2.0"
+readme = "README.md"
+build = "build.rs"
+edition = "2018"
+repository = "https://github.com/aki-akaguma/aki-stats"
+
+[lib]
+name = "libaki_stats"
+path = "src/lib.rs"
+crate-type = ["lib"]
+
+[[bin]]
+name = "aki-stats"
+path = "src/main.rs"
+
+[features]
+default = []
+
+[dependencies]
+regex = "1.4"
+anyhow = "1.0"
+flood-tide = { version="0.1", default-features=true, features=["stop_at_mm"] }
+runnel = "0.3"
+
+[dev-dependencies]
+
+[build-dependencies]
+rustc_version = "=0.2.3"
+
+[workspace]
+members = [
+    "xtask",
+]
+
+[package.metadata.deb]
+features = []
+section = "AAA-text"
+priority = "optional"
+maintainer = "aki <aki.akaguma@hotmail.com>"
+extended-description = """\
+This program output the statistics of text, like a wc of linux command.
+"""
+depends = "$auto"
+assets = [
+    ["target/release/aki-stats", "usr/bin/aki-stats", "755"],
+]
