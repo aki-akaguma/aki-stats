@@ -23,6 +23,8 @@ fn fix_type(vec_optstr: &mut [OptStr]) {
         let v_meta_type = match v.lon.as_str() {
             "head" => MetaType::Usize,
             "tail" => MetaType::Usize,
+            "locale" => MetaType::Other("opt_locale_loc".to_string()),
+            "query" => MetaType::String,
             _ => v.meta_type.clone(),
         };
         //
@@ -36,13 +38,10 @@ fn fix_type(vec_optstr: &mut [OptStr]) {
         };
         v.is_vec = v_is_vec;
         */
-        /*
         let v_is_opt = match v.lon.as_str() {
-            "head" => true,
-            "tail" => true,
+            "query" => true,
             _ => false,
         };
         v.is_opt = v_is_opt;
-        */
     }
 }

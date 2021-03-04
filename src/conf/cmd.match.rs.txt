@@ -18,6 +18,12 @@ match CmdOp::from(nv.opt.num) {
     CmdOp::Words => {
         conf.flg_words = true;
     }
+    CmdOp::Locale => {
+        conf.opt_locale = value_to_opt_locale_loc(nv)?;
+    }
+    CmdOp::Query => {
+        conf.opt_query = Some(value_to_string(nv)?);
+    }
     CmdOp::Help => {
         conf.flg_help = true;
     }

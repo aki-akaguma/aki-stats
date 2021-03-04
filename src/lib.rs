@@ -13,6 +13,8 @@
 //!   -l, --lines               output the line counts
 //!   -m, --max-line-bytes      output the maximum byte counts of line
 //!   -w, --words               output the word counts
+//!       --locale <loc>        locale of number format: en, fr, ... posix
+//!   -?, --query <q>           display available names of locale and exit
 //!
 //!   -H, --help        display this help and exit
 //!   -V, --version     display version information and exit

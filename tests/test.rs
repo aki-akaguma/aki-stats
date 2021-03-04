@@ -17,6 +17,8 @@ macro_rules! help_msg {
             "  -l, --lines               output the line counts\n",
             "  -m, --max-line-bytes      output the maximum byte counts of line\n",
             "  -w, --words               output the word counts\n",
+            "      --locale <loc>        locale of number format: en, fr, ... posix\n",
+            "  -?, --query <q>           display available names of locale and exit\n",
             "\n",
             "  -H, --help        display this help and exit\n",
             "  -V, --version     display version information and exit\n",
@@ -142,7 +144,7 @@ mod test_1 {
         assert_eq!(oup.stderr, "");
         assert_eq!(
             oup.stdout,
-            "lines: 26, bytes: 1207, chars: 1207, words: 226, max: 83, \n"
+            "lines:\"26\", bytes:\"1207\", chars:\"1207\", words:\"226\", max:\"83\"\n"
         );
         assert_eq!(oup.status.success(), true);
     }
@@ -151,7 +153,7 @@ mod test_1 {
     fn test_t1() {
         let oup = exec_target_with_in(TARGET_EXE_PATH, &["-l"], super::IN_DAT_1.as_bytes());
         assert_eq!(oup.stderr, "");
-        assert_eq!(oup.stdout, "lines: 26, \n");
+        assert_eq!(oup.stdout, "lines:\"26\"\n");
         assert_eq!(oup.status.success(), true);
     }
     //
@@ -159,7 +161,7 @@ mod test_1 {
     fn test_t2() {
         let oup = exec_target_with_in(TARGET_EXE_PATH, &["-b"], super::IN_DAT_1.as_bytes());
         assert_eq!(oup.stderr, "");
-        assert_eq!(oup.stdout, "bytes: 1207, \n");
+        assert_eq!(oup.stdout, "bytes:\"1207\"\n");
         assert_eq!(oup.status.success(), true);
     }
     //
@@ -167,7 +169,7 @@ mod test_1 {
     fn test_t3() {
         let oup = exec_target_with_in(TARGET_EXE_PATH, &["-c"], super::IN_DAT_1.as_bytes());
         assert_eq!(oup.stderr, "");
-        assert_eq!(oup.stdout, "chars: 1207, \n");
+        assert_eq!(oup.stdout, "chars:\"1207\"\n");
         assert_eq!(oup.status.success(), true);
     }
     //
@@ -175,7 +177,7 @@ mod test_1 {
     fn test_t4() {
         let oup = exec_target_with_in(TARGET_EXE_PATH, &["-w"], super::IN_DAT_1.as_bytes());
         assert_eq!(oup.stderr, "");
-        assert_eq!(oup.stdout, "words: 226, \n");
+        assert_eq!(oup.stdout, "words:\"226\"\n");
         assert_eq!(oup.status.success(), true);
     }
     //
@@ -183,7 +185,57 @@ mod test_1 {
     fn test_t5() {
         let oup = exec_target_with_in(TARGET_EXE_PATH, &["-l", "-m"], super::IN_DAT_1.as_bytes());
         assert_eq!(oup.stderr, "");
-        assert_eq!(oup.stdout, "lines: 26, max: 83, \n");
+        assert_eq!(oup.stdout, "lines:\"26\", max:\"83\"\n");
+        assert_eq!(oup.status.success(), true);
+    }
+}
+
+mod test_2 {
+    use crate::helper::exec_target_with_in;
+    const TARGET_EXE_PATH: &'static str = super::TARGET_EXE_PATH;
+    //
+    #[test]
+    fn test_t0_en() {
+        let oup = exec_target_with_in(
+            TARGET_EXE_PATH,
+            &["-a", "--locale", "en"],
+            super::IN_DAT_1.as_bytes(),
+        );
+        assert_eq!(oup.stderr, "");
+        assert_eq!(
+            oup.stdout,
+            "lines:\"26\", bytes:\"1,207\", chars:\"1,207\", words:\"226\", max:\"83\"\n"
+        );
+        assert_eq!(oup.status.success(), true);
+    }
+    //
+    #[test]
+    fn test_t0_fr() {
+        let oup = exec_target_with_in(
+            TARGET_EXE_PATH,
+            &["-a", "--locale", "fr"],
+            super::IN_DAT_1.as_bytes(),
+        );
+        assert_eq!(oup.stderr, "");
+        assert_eq!(
+            oup.stdout,
+            "lines:\"26\", bytes:\"1\u{202f}207\", chars:\"1\u{202f}207\", words:\"226\", max:\"83\"\n"
+        );
+        assert_eq!(oup.status.success(), true);
+    }
+    //
+    #[test]
+    fn test_t0_de() {
+        let oup = exec_target_with_in(
+            TARGET_EXE_PATH,
+            &["-a", "--locale", "de"],
+            super::IN_DAT_1.as_bytes(),
+        );
+        assert_eq!(oup.stderr, "");
+        assert_eq!(
+            oup.stdout,
+            "lines:\"26\", bytes:\"1.207\", chars:\"1.207\", words:\"226\", max:\"83\"\n"
+        );
         assert_eq!(oup.status.success(), true);
     }
 }

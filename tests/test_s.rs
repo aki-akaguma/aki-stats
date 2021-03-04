@@ -15,6 +15,8 @@ macro_rules! help_msg {
             "  -l, --lines               output the line counts\n",
             "  -m, --max-line-bytes      output the maximum byte counts of line\n",
             "  -w, --words               output the word counts\n",
+            "      --locale <loc>        locale of number format: en, fr, ... posix\n",
+            "  -?, --query <q>           display available names of locale and exit\n",
             "\n",
             "  -H, --help        display this help and exit\n",
             "  -V, --version     display version information and exit\n",
@@ -72,9 +74,10 @@ macro_rules! do_execute {
         match r {
             Ok(_) => {}
             Err(ref err) => {
-                #[rustfmt::skip]
-                                            let _ = sioe.perr().lock()
-                                                .write_fmt(format_args!("{}: {}\n", program, err));
+                let _ = sioe
+                    .perr()
+                    .lock()
+                    .write_fmt(format_args!("{}: {}\n", program, err));
             }
         };
         (r, sioe)
@@ -183,7 +186,7 @@ mod test_s1 {
         assert_eq!(buff!(sioe, serr), "");
         assert_eq!(
             buff!(sioe, sout),
-            "lines: 26, bytes: 1207, chars: 1207, words: 226, max: 83, \n"
+            "lines:\"26\", bytes:\"1207\", chars:\"1207\", words:\"226\", max:\"83\"\n"
         );
         assert_eq!(r.is_ok(), true);
     }
@@ -192,7 +195,7 @@ mod test_s1 {
     fn test_t1() {
         let (r, sioe) = do_execute!(&["-l"], super::IN_DAT_1);
         assert_eq!(buff!(sioe, serr), "");
-        assert_eq!(buff!(sioe, sout), "lines: 26, \n");
+        assert_eq!(buff!(sioe, sout), "lines:\"26\"\n");
         assert_eq!(r.is_ok(), true);
     }
     //
@@ -200,7 +203,7 @@ mod test_s1 {
     fn test_t2() {
         let (r, sioe) = do_execute!(&["-b"], super::IN_DAT_1);
         assert_eq!(buff!(sioe, serr), "");
-        assert_eq!(buff!(sioe, sout), "bytes: 1207, \n");
+        assert_eq!(buff!(sioe, sout), "bytes:\"1207\"\n");
         assert_eq!(r.is_ok(), true);
     }
     //
@@ -208,7 +211,7 @@ mod test_s1 {
     fn test_t3() {
         let (r, sioe) = do_execute!(&["-c"], super::IN_DAT_1);
         assert_eq!(buff!(sioe, serr), "");
-        assert_eq!(buff!(sioe, sout), "chars: 1207, \n");
+        assert_eq!(buff!(sioe, sout), "chars:\"1207\"\n");
         assert_eq!(r.is_ok(), true);
     }
     //
@@ -216,7 +219,7 @@ mod test_s1 {
     fn test_t4() {
         let (r, sioe) = do_execute!(&["-w"], super::IN_DAT_1);
         assert_eq!(buff!(sioe, serr), "");
-        assert_eq!(buff!(sioe, sout), "words: 226, \n");
+        assert_eq!(buff!(sioe, sout), "words:\"226\"\n");
         assert_eq!(r.is_ok(), true);
     }
     //
@@ -224,7 +227,47 @@ mod test_s1 {
     fn test_t5() {
         let (r, sioe) = do_execute!(&["-l", "-m"], super::IN_DAT_1);
         assert_eq!(buff!(sioe, serr), "");
-        assert_eq!(buff!(sioe, sout), "lines: 26, max: 83, \n");
+        assert_eq!(buff!(sioe, sout), "lines:\"26\", max:\"83\"\n");
+        assert_eq!(r.is_ok(), true);
+    }
+}
+
+mod test_s2 {
+    use libaki_stats::*;
+    use runnel::medium::stringio::{StringErr, StringIn, StringOut};
+    use runnel::RunnelIoe;
+    use std::io::Write;
+    //
+    #[test]
+    fn test_t0_en() {
+        let (r, sioe) = do_execute!(&["-a", "--locale", "en"], super::IN_DAT_1);
+        assert_eq!(buff!(sioe, serr), "");
+        assert_eq!(
+            buff!(sioe, sout),
+            "lines:\"26\", bytes:\"1,207\", chars:\"1,207\", words:\"226\", max:\"83\"\n"
+        );
+        assert_eq!(r.is_ok(), true);
+    }
+    //
+    #[test]
+    fn test_t0_fr() {
+        let (r, sioe) = do_execute!(&["-a", "--locale", "fr"], super::IN_DAT_1);
+        assert_eq!(buff!(sioe, serr), "");
+        assert_eq!(
+            buff!(sioe, sout),
+            "lines:\"26\", bytes:\"1\u{202f}207\", chars:\"1\u{202f}207\", words:\"226\", max:\"83\"\n"
+        );
+        assert_eq!(r.is_ok(), true);
+    }
+    //
+    #[test]
+    fn test_t0_de() {
+        let (r, sioe) = do_execute!(&["-a", "--locale", "de"], super::IN_DAT_1);
+        assert_eq!(buff!(sioe, serr), "");
+        assert_eq!(
+            buff!(sioe, sout),
+            "lines:\"26\", bytes:\"1.207\", chars:\"1.207\", words:\"226\", max:\"83\"\n"
+        );
         assert_eq!(r.is_ok(), true);
     }
 }
