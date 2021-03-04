@@ -1,6 +1,6 @@
 [package]
 name = "aki-stats"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["aki <aki.akaguma@hotmail.com>"]
 description = """
 output the statistics of text, like a wc of linux command.
@@ -26,6 +26,7 @@ path = "src/main.rs"
 default = []
 
 [dependencies]
+num-format = "0.4"
 regex = "1.4"
 anyhow = "1.0"
 flood-tide = { version="0.1", default-features=true, features=["stop_at_mm"] }

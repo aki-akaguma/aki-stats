@@ -1,6 +1,7 @@
 use crate::conf::CmdOptConf;
 use crate::util::err::BrokenPipeError;
 use runnel::RunnelIoe;
+use std::fmt::Write as FmtWrite;
 use std::io::{BufRead, Write};
 
 pub fn run(sioe: &RunnelIoe, conf: &CmdOptConf) -> anyhow::Result<()> {
@@ -32,7 +33,7 @@ impl std::default::Default for Stats {
 
 fn run_0(sioe: &RunnelIoe, conf: &CmdOptConf) -> anyhow::Result<()> {
     let mut stats = Stats::default();
-    //
+    // input
     for line in sioe.pin().lock().lines() {
         let line_s = line?;
         let line_ss = line_s.as_str();
@@ -59,34 +60,39 @@ fn run_0(sioe: &RunnelIoe, conf: &CmdOptConf) -> anyhow::Result<()> {
             }
         }
     }
-    //
+    // output
     {
-        let mut o = sioe.pout().lock();
-        //
+        let mut vec: Vec<String> = Vec::new();
         if conf.flg_lines {
-            o.write_fmt(format_args!("lines: {}, ", stats.line_count))?;
+            vec.push(my_formatted(conf, "lines", stats.line_count)?);
         }
         if conf.flg_bytes {
-            o.write_fmt(format_args!("bytes: {}, ", stats.byte_count))?;
+            vec.push(my_formatted(conf, "bytes", stats.byte_count)?);
         }
         if conf.flg_chars {
-            o.write_fmt(format_args!("chars: {}, ", stats.char_count))?;
+            vec.push(my_formatted(conf, "chars", stats.char_count)?);
         }
         if conf.flg_words {
-            o.write_fmt(format_args!("words: {}, ", stats.word_count))?;
+            vec.push(my_formatted(conf, "words", stats.word_count)?);
         }
         if conf.flg_max_line_bytes {
-            o.write_fmt(format_args!("max: {}, ", stats.max_line_bytes))?;
+            vec.push(my_formatted(conf, "max", stats.max_line_bytes)?);
         }
         //
-        o.write_fmt(format_args!("\n"))?;
+        let mut o = sioe.pout().lock();
+        o.write_fmt(format_args!("{}\n", vec.join(", ")))?;
         o.flush()?;
     }
-    /*
-    #[rustfmt::skip]
-    sioe.pout().lock().write_fmt(format_args!("{}\n", line_ss))?;
-    sioe.pout().lock().flush()?;
-    */
     //
     Ok(())
+}
+
+fn my_formatted(conf: &CmdOptConf, label: &str, num: u64) -> anyhow::Result<String> {
+    let mut s = String::new();
+    s.write_fmt(format_args!(
+        "{}:\"{}\"",
+        label,
+        conf.opt_locale.formatted_string(num)
+    ))?;
+    Ok(s)
 }

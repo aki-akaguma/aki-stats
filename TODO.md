@@ -2,5 +2,5 @@
 
 ## Todos
 
-- [ ] Better display format.
+- [X] Better display format.
 - [ ] Better word count algorithm.

@@ -4,6 +4,10 @@ use flood_tide::HelpVersion;
 use flood_tide::{Arg, NameVal, Opt, OptNum};
 use flood_tide::{OptParseError, OptParseErrors};
 
+use crate::util::OptLocaleLoc;
+use num_format::Locale;
+use std::str::FromStr;
+
 //----------------------------------------------------------------------
 include!("cmd.help.rs.txt");
 
@@ -45,6 +49,30 @@ fn help_message(program: &str) -> String {
     [ &ver, "", &usa, DESCRIPTIONS_TEXT, OPTIONS_TEXT, EXAMPLES_TEXT].join("\n")
 }
 
+#[rustfmt::skip]
+fn query_locale(_program: &str) -> String {
+    format!( "locales: C {}", Locale::available_names().join(" "))
+}
+
+#[rustfmt::skip]
+fn query_error(_program: &str, s: &str) -> String {
+    format!( "unknown query: {}\navailable query: locale", s)
+}
+
+//----------------------------------------------------------------------
+fn value_to_opt_locale_loc(nv: &NameVal<'_>) -> Result<OptLocaleLoc, OptParseError> {
+    match nv.val {
+        Some(s) => match FromStr::from_str(s) {
+            Ok(color) => Ok(color),
+            Err(err) => Err(OptParseError::invalid_option_argument(
+                &nv.opt.lon,
+                &err.to_string(),
+            )),
+        },
+        None => Err(OptParseError::missing_option_argument(&nv.opt.lon)),
+    }
+}
+
 //----------------------------------------------------------------------
 #[allow(clippy::unnecessary_wraps)]
 fn parse_match(conf: &mut CmdOptConf, nv: &NameVal<'_>) -> Result<(), OptParseError> {
@@ -71,6 +99,24 @@ pub fn parse_cmdopts(a_prog_name: &str, args: &[&str]) -> Result<CmdOptConf, Opt
         errs.push(OptParseError::version_message(&version_message(
             &conf.prog_name,
         )));
+        return Err(errs);
+    }
+    if conf.opt_query.is_some() {
+        let mut errs = OptParseErrors::new();
+        let s = conf.opt_query.unwrap();
+        match s.as_str() {
+            "locale" => {
+                errs.push(OptParseError::version_message(&query_locale(
+                    &conf.prog_name,
+                )));
+            }
+            _ => {
+                errs.push(OptParseError::version_message(&query_error(
+                    &conf.prog_name,
+                    s.as_str(),
+                )));
+            }
+        }
         return Err(errs);
     }
     //
