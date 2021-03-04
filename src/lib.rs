@@ -41,7 +41,7 @@
 //!
 //! result output:
 //! ```text
-//! lines: 26, bytes: 1207, chars: 1207, words: 226, max: 83,
+//! lines:"26", bytes:"1207", chars:"1207", words:"226", max:"83"
 //! ```
 //!
 //! ## Example 2: the line count
@@ -55,7 +55,21 @@
 //!
 //! result output:
 //! ```text
-//! lines: 26,
+//! lines:"26"
+//! ```
+//!
+//! ## Example 3: the byte count with locale en
+//!
+//! Output the only byte count.
+//!
+//! command line:
+//! ```text
+//! cat fixtures/sherlock.txt | aki-stats -b --locale en
+//! ```
+//!
+//! result output:
+//! ```text
+//! bytes:"1,207"
 //! ```
 //!
 //! # Library example

@@ -25,6 +25,8 @@ Options:
   -l, --lines               output the line counts
   -m, --max-line-bytes      output the maximum byte counts of line
   -w, --words               output the word counts
+      --locale <loc>        locale of number format: en, fr, ... posix
+  -?, --query <q>           display available names of locale and exit
 
   -H, --help        display this help and exit
   -V, --version     display version information and exit
@@ -69,7 +71,7 @@ cat fixtures/sherlock.txt | aki-stats -a
 
 result output:
 ```
-lines: 26, bytes: 1207, chars: 1207, words: 226, max: 83,
+lines:"26", bytes:"1207", chars:"1207", words:"226", max:"83"
 ```
 
 ### Example 2: the line count
@@ -83,7 +85,21 @@ cat fixtures/sherlock.txt | aki-stats -l
 
 result output:
 ```
-lines: 26,
+lines:"26"
+```
+
+### Example 3: the byte count with locale en
+
+Output the only byte count.
+
+command line:
+```
+cat fixtures/sherlock.txt | aki-stats -b --locale en
+```
+
+result output:
+```
+bytes:"1,207"
 ```
 
 ## Library example
