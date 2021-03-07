@@ -1,6 +1,12 @@
-TBD
+aki-stats TBD
 ===
 Unreleased changes. Release notes have not yet been written.
+
+0.1.2 (2021-03-08)
+=====
+
+* update crate: runnel
+* rename file: xtask/src/cmd.txt to xtask/src/aki-stats-cmd.txt
 
 0.1.1 (2021-03-04)
 =====
