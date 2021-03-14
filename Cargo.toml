@@ -1,6 +1,6 @@
 [package]
 name = "aki-stats"
-version = "0.1.3"
+version = "0.1.4"
 authors = ["aki <aki.akaguma@hotmail.com>"]
 description = """
 output the statistics of text, like a wc of linux command.
