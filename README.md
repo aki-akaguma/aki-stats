@@ -107,3 +107,7 @@ bytes:"1,207"
 See [`fn execute()`] for this library examples.
 
 [`fn execute()`]: crate::execute
+
+## Changelogs
+
+[This crate's changelog here.](https://github.com/aki-akaguma/aki-stats/blob/main/CHANGELOG.md)
