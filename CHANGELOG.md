@@ -2,6 +2,11 @@ aki-stats TBD
 ===
 Unreleased changes. Release notes have not yet been written.
 
+0.1.5 (2021-03-22)
+=====
+
+* fix depends: unnecessary regex
+
 0.1.4 (2021-03-14)
 =====
 
