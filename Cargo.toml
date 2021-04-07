@@ -1,6 +1,6 @@
 [package]
 name = "aki-stats"
-version = "0.1.5"
+version = "0.1.6"
 authors = ["aki <aki.akaguma@hotmail.com>"]
 description = """
 output the statistics of text, like a wc of linux command.
@@ -27,7 +27,7 @@ default = []
 
 [dependencies]
 anyhow = "1.0"
-flood-tide = { version="0.1", default-features=true, features=["stop_at_mm"] }
+flood-tide = { version="0.2", default-features=true, features=["stop_at_mm"] }
 num-format = "0.4"
 runnel = "0.3"
 
