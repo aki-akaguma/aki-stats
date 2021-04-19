@@ -2,6 +2,11 @@ aki-stats TBD
 ===
 Unreleased changes. Release notes have not yet been written.
 
+0.1.7 (2021-04-19)
+=====
+
+* update depends: flood-tide-gen(0.1.10)
+
 0.1.6 (2021-04-07)
 =====
 
