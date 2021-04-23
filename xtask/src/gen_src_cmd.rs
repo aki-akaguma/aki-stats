@@ -12,6 +12,8 @@ pub fn do_gen_src() -> anyhow::Result<()> {
                 "tail" => (false, false, MetaType::Usize),
                 "locale" => (false, false, MetaType::Other("opt_locale_loc".into())),
                 "query" => (true, false, opt_str.meta_type.clone()),
+                //
+                "X" => (false, true, MetaType::Other("opt_uc_x_param".into())),
                 _ => return None,
             };
             Some(FixupType::from_tuple(tup))

@@ -11,6 +11,7 @@ const OPTIONS_TEXT: &str = r"Options:
 
   -H, --help        display this help and exit
   -V, --version     display version information and exit
+  -X <x-options>    x options. try -X help
 ";
 
 #[repr(u8)]
@@ -26,6 +27,7 @@ enum CmdOp {
     Query,
     Help,
     Version,
+    UcX,
 }
 
 impl std::convert::From<u8> for CmdOp {
@@ -40,7 +42,8 @@ impl CmdOp {
 }
 
 #[rustfmt::skip]
-const OPT_ARY: [Opt;10] = [
+const OPT_ARY: [Opt;11] = [
+    Opt { sho: b'X', lon: "",              has: Arg::Yes, num: CmdOp::UcX.to(), },
     Opt { sho: b'a', lon: "all",           has: Arg::No,  num: CmdOp::All.to(), },
     Opt { sho: b'b', lon: "bytes",         has: Arg::No,  num: CmdOp::Bytes.to(), },
     Opt { sho: b'c', lon: "chars",         has: Arg::No,  num: CmdOp::Chars.to(), },
@@ -54,8 +57,8 @@ const OPT_ARY: [Opt;10] = [
 ];
 
 #[rustfmt::skip]
-const OPT_ARY_SHO_IDX: [(u8,usize);9] = [
-(b'?',7),(b'H',3),(b'V',8),(b'a',0),(b'b',1),(b'c',2),(b'l',4),(b'm',6),(b'w',9),];
+const OPT_ARY_SHO_IDX: [(u8,usize);10] = [
+(b'?',8),(b'H',4),(b'V',9),(b'X',0),(b'a',1),(b'b',2),(b'c',3),(b'l',5),(b'm',7),(b'w',10),];
 
 #[derive(Debug, Default, PartialEq)]
 pub struct CmdOptConf {
@@ -71,6 +74,7 @@ pub struct CmdOptConf {
     pub opt_query: Option<String>,
     pub flg_help: bool,
     pub flg_version: bool,
+    pub opt_uc_x: Vec<OptUcXParam>,
     //
     pub arg_params: Vec<String>,
 }
@@ -87,6 +91,32 @@ impl flood_tide::HelpVersion for CmdOptConf {
 fn value_to_string(nv: &NameVal<'_>) -> Result<String, OptParseError> {
     match nv.val {
         Some(x) => Ok(x.to_string()),
-        None => Err(OptParseError::missing_option_argument(&nv.opt.lon)),
+        None => Err(OptParseError::missing_option_argument(&nv.opt.lon_or_sho())),
+    }
+}
+
+fn value_to_opt_locale_loc(nv: &NameVal<'_>) -> Result<OptLocaleLoc, OptParseError> {
+    match nv.val {
+        Some(s) => match FromStr::from_str(s) {
+            Ok(x) => Ok(x),
+            Err(err) => Err(OptParseError::invalid_option_argument(
+                &nv.opt.lon_or_sho(),
+                &err.to_string(),
+            )),
+        },
+        None => Err(OptParseError::missing_option_argument(&nv.opt.lon_or_sho())),
+    }
+}
+
+fn value_to_opt_uc_x_param(nv: &NameVal<'_>) -> Result<OptUcXParam, OptParseError> {
+    match nv.val {
+        Some(s) => match FromStr::from_str(s) {
+            Ok(x) => Ok(x),
+            Err(err) => Err(OptParseError::invalid_option_argument(
+                &nv.opt.lon_or_sho(),
+                &err.to_string(),
+            )),
+        },
+        None => Err(OptParseError::missing_option_argument(&nv.opt.lon_or_sho())),
     }
 }

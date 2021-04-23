@@ -6,6 +6,7 @@ use flood_tide::{OptParseError, OptParseErrors};
 
 use crate::util::OptLocaleLoc;
 use num_format::Locale;
+use crate::util::OptUcXParam;
 use std::str::FromStr;
 
 //----------------------------------------------------------------------
@@ -50,6 +51,33 @@ fn help_message(program: &str) -> String {
 }
 
 #[rustfmt::skip]
+fn opt_uc_x_help_message(_program: &str) -> String {
+    let z_opts = concat!(
+        "Options:\n",
+        "  -X rust-version-info     display package version info and exit\n",
+        "  -X base_dir=<path>       set <path> is base directory\n",
+    );
+    z_opts.to_string()
+}
+
+#[rustfmt::skip]
+fn opt_uc_x_package_version_info(_program: &str) -> String {
+    use std::io::Read;
+    let mut string = String::new();
+    let fnm = format!("/usr/share/doc/{}/rust-version-info.txt", env!("CARGO_PKG_NAME"));
+    let file = std::fs::File::open(&fnm);
+    match file {
+        Ok(mut f) => {
+            f.read_to_string(&mut string).unwrap();
+            string
+        },
+        Err(err) => {
+            format!("ERROR: {}: '{}'", err, fnm)
+        },
+    }
+}
+
+#[rustfmt::skip]
 fn query_locale(_program: &str) -> String {
     format!( "locales: C {}", Locale::available_names().join(" "))
 }
@@ -57,20 +85,6 @@ fn query_locale(_program: &str) -> String {
 #[rustfmt::skip]
 fn query_error(_program: &str, s: &str) -> String {
     format!( "unknown query: {}\navailable query: locale", s)
-}
-
-//----------------------------------------------------------------------
-fn value_to_opt_locale_loc(nv: &NameVal<'_>) -> Result<OptLocaleLoc, OptParseError> {
-    match nv.val {
-        Some(s) => match FromStr::from_str(s) {
-            Ok(color) => Ok(color),
-            Err(err) => Err(OptParseError::invalid_option_argument(
-                &nv.opt.lon,
-                &err.to_string(),
-            )),
-        },
-        None => Err(OptParseError::missing_option_argument(&nv.opt.lon)),
-    }
 }
 
 //----------------------------------------------------------------------
@@ -100,6 +114,22 @@ pub fn parse_cmdopts(a_prog_name: &str, args: &[&str]) -> Result<CmdOptConf, Opt
             &conf.prog_name,
         )));
         return Err(errs);
+    }
+    if !conf.opt_uc_x.is_empty() {
+        if conf.is_opt_uc_x_help() {
+            let mut errs = OptParseErrors::new();
+            errs.push(OptParseError::help_message(&opt_uc_x_help_message(
+                &conf.prog_name,
+            )));
+            return Err(errs);
+        }
+        if conf.is_opt_uc_x_package_version_info() {
+            let mut errs = OptParseErrors::new();
+            errs.push(OptParseError::help_message(&opt_uc_x_package_version_info(
+                &conf.prog_name,
+            )));
+            return Err(errs);
+        }
     }
     if conf.opt_query.is_some() {
         let mut errs = OptParseErrors::new();
