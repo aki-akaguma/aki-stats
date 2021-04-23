@@ -1,6 +1,6 @@
 [package]
 name = "aki-stats"
-version = "0.1.7"
+version = "0.1.8"
 authors = ["aki <aki.akaguma@hotmail.com>"]
 description = """
 output the statistics of text, like a wc of linux command.
@@ -34,6 +34,7 @@ runnel = "0.3"
 [dev-dependencies]
 
 [build-dependencies]
+rust-version-info-file = "0.1"
 rustc_version = "0.3"
 
 [workspace]
@@ -50,6 +51,9 @@ extended-description = """\
 This program output the statistics of text, like a wc of linux command.
 """
 depends = "$auto"
+separate-debug-symbols = true
 assets = [
     ["target/release/aki-stats", "usr/bin/aki-stats", "755"],
+    ["target/rust-version-info.txt", "usr/share/doc/aki-stats/", "644"],
+    ["README.md", "usr/share/doc/aki-stats/", "644"],
 ]
