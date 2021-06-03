@@ -1,6 +1,6 @@
 [package]
 name = "aki-stats"
-version = "0.1.9"
+version = "0.1.10"
 authors = ["aki <aki.akaguma@hotmail.com>"]
 description = """
 output the statistics of text, like a wc of linux command.
@@ -24,6 +24,7 @@ path = "src/main.rs"
 
 [features]
 default = []
+debian_build = []
 
 [dependencies]
 anyhow = "1.0"
@@ -43,7 +44,7 @@ members = [
 ]
 
 [package.metadata.deb]
-features = []
+features = ["debian_build"]
 section = "AAA-text"
 priority = "optional"
 maintainer = "aki <aki.akaguma@hotmail.com>"
