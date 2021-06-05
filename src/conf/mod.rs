@@ -31,4 +31,12 @@ impl CmdOptConf {
         }
         false
     }
+    pub fn is_opt_uc_x_map_ascii_rust_src(&self) -> bool {
+        for o in self.opt_uc_x.iter() {
+            if let OptUcXParam::MapAsciiRustSrc = o {
+                return true;
+            }
+        }
+        false
+    }
 }

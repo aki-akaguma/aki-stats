@@ -2,6 +2,11 @@ aki-stats TBD
 ===
 Unreleased changes. Release notes have not yet been written.
 
+0.1.11 (2021-06-05)
+=====
+
+* add command option: --map-ascii and -X map-ascii-rust-src
+
 0.1.10 (2021-06-03)
 =====
 

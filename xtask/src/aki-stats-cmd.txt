@@ -1,8 +1,9 @@
 Options:
-  -a, --all                 output the all statistics of text
+  -a, --all                 output the all statistics of text, exclude ascii map
   -b, --bytes               output the byte counts
   -c, --chars               output the unicode character counts
   -l, --lines               output the line counts
+      --map-ascii           output the ascii map statistics
   -m, --max-line-bytes      output the maximum byte counts of line
   -w, --words               output the word counts
       --locale <loc>        locale of number format: en, fr, ... posix

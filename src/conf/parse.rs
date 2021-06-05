@@ -5,8 +5,8 @@ use flood_tide::{Arg, NameVal, Opt, OptNum};
 use flood_tide::{OptParseError, OptParseErrors};
 
 use crate::util::OptLocaleLoc;
-use num_format::Locale;
 use crate::util::OptUcXParam;
+use num_format::Locale;
 use std::str::FromStr;
 
 //----------------------------------------------------------------------
@@ -56,6 +56,7 @@ fn opt_uc_x_help_message(_program: &str) -> String {
         "Options:\n",
         "  -X rust-version-info     display rust version info and exit\n",
         "  -X base_dir=<path>       set <path> is base directory\n",
+        "  -X map-ascii-rust-src    output rust source of the ascii map statistics\n",
     );
     z_opts.to_string()
 }
@@ -168,8 +169,15 @@ pub fn parse_cmdopts(a_prog_name: &str, args: &[&str]) -> Result<CmdOptConf, Opt
             conf.flg_lines = true;
             conf.flg_words = true;
             conf.flg_max_line_bytes = true;
-        } else if !conf.flg_bytes && !conf.flg_chars && !conf.flg_lines && !conf.flg_words {
-            errs.push(OptParseError::missing_option("b, c, l, w or a"));
+        } else if !conf.flg_map_ascii
+            && !conf.flg_bytes
+            && !conf.flg_chars
+            && !conf.flg_lines
+            && !conf.flg_words
+        {
+            errs.push(OptParseError::missing_option(
+                "b, c, l, w, a or --map-ascii",
+            ));
         }
         //
         if let Some(free) = opt_free {

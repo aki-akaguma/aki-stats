@@ -5,6 +5,7 @@ pub enum OptUcXParam {
     Help,
     RustVersionInfo,
     BaseDir(String),
+    MapAsciiRustSrc,
 }
 
 impl Default for OptUcXParam {
@@ -20,6 +21,7 @@ impl ::std::str::FromStr for OptUcXParam {
             "void" => OptUcXParam::Void,
             "help" => OptUcXParam::Help,
             "rust-version-info" => OptUcXParam::RustVersionInfo,
+            "map-ascii-rust-src" => OptUcXParam::MapAsciiRustSrc,
             _ => {
                 let bs = "base_dir=";
                 if let Some(stripped) = s.strip_prefix(bs) {
@@ -40,6 +42,7 @@ impl ::std::fmt::Display for OptUcXParam {
             OptUcXParam::Void => "void",
             OptUcXParam::Help => "help",
             OptUcXParam::RustVersionInfo => "rust-version-info",
+            OptUcXParam::MapAsciiRustSrc => "map-ascii-rust-src",
             OptUcXParam::BaseDir(_) => "base_dir=",
         };
         write!(f, "{}", s)

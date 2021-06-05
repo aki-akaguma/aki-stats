@@ -11,10 +11,11 @@ macro_rules! help_msg {
             "output the statistics of text, like a wc of linux command.\n",
             "\n",
             "Options:\n",
-            "  -a, --all                 output the all statistics of text\n",
+            "  -a, --all                 output the all statistics of text, exclude ascii map\n",
             "  -b, --bytes               output the byte counts\n",
             "  -c, --chars               output the unicode character counts\n",
             "  -l, --lines               output the line counts\n",
+            "      --map-ascii           output the ascii map statistics\n",
             "  -m, --max-line-bytes      output the maximum byte counts of line\n",
             "  -w, --words               output the word counts\n",
             "      --locale <loc>        locale of number format: en, fr, ... posix\n",
@@ -96,7 +97,7 @@ mod test_0 {
             concat!(
                 program_name!(),
                 ": ",
-                "Missing option: b, c, l, w or a\n",
+                "Missing option: b, c, l, w, a or --map-ascii\n",
                 "Unexpected argument: \n",
                 try_help_msg!()
             )

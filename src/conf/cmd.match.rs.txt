@@ -12,6 +12,9 @@ match CmdOp::from(nv.opt.num) {
     CmdOp::Lines => {
         conf.flg_lines = true;
     }
+    CmdOp::MapAscii => {
+        conf.flg_map_ascii = true;
+    }
     CmdOp::MaxLineBytes => {
         conf.flg_max_line_bytes = true;
     }
