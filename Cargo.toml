@@ -1,6 +1,6 @@
 [package]
 name = "aki-stats"
-version = "0.1.11"
+version = "0.1.12"
 authors = ["aki <aki.akaguma@hotmail.com>"]
 description = """
 output the statistics of text, like a wc of linux command.
@@ -31,12 +31,13 @@ anyhow = "1.0"
 flood-tide = { version="0.2", default-features=true, features=["stop_at_mm"] }
 num-format = "0.4"
 runnel = "0.3"
+memx-cdy = "0.1"
 
 [dev-dependencies]
 
 [build-dependencies]
 rust-version-info-file = "0.1"
-rustc_version = "0.3"
+rustc_version = "0.4"
 
 [workspace]
 members = [
