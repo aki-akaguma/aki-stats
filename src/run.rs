@@ -36,8 +36,7 @@ struct StatsAscii {
 }
 impl StatsAscii {
     fn new(sz: usize) -> StatsAscii {
-        let mut v = Vec::with_capacity(sz);
-        v.resize(sz, 0);
+        let v = vec![0; sz];
         Self { ascii: v }
     }
     fn count_up(&mut self, b: u8) {
@@ -128,8 +127,8 @@ fn run_0(sioe: &RunnelIoe, conf: &CmdOptConf) -> anyhow::Result<()> {
         o.flush()?;
     }
     if conf.flg_map_ascii {
+        let mut vec: Vec<String> = Vec::new();
         if conf.is_opt_uc_x_map_ascii_rust_src() {
-            let mut vec: Vec<String> = Vec::new();
             let max_val = map_ascii.max();
             for i in 0x00..0x80 {
                 let val = map_ascii.get_count(i);
@@ -144,8 +143,6 @@ fn run_0(sioe: &RunnelIoe, conf: &CmdOptConf) -> anyhow::Result<()> {
             ))?;
             o.flush()?;
         } else {
-            let mut vec: Vec<String> = Vec::new();
-            //
             let mut ascii_ctrl: u64 = 0;
             let mut ascii_ctrl_ht: u64 = 0;
             let mut ascii_ctrl_vt: u64 = 0;

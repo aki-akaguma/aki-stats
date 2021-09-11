@@ -3,33 +3,37 @@ macro_rules! help_msg {
         concat!(
             version_msg!(),
             "\n",
-            "Usage:\n",
-            "  aki-stats [options]\n",
-            "\n",
-            "output the statistics of text, like a wc of linux command.\n",
-            "\n",
-            "Options:\n",
-            "  -a, --all                 output the all statistics of text, exclude ascii map\n",
-            "  -b, --bytes               output the byte counts\n",
-            "  -c, --chars               output the unicode character counts\n",
-            "  -l, --lines               output the line counts\n",
-            "      --map-ascii           output the ascii map statistics\n",
-            "  -m, --max-line-bytes      output the maximum byte counts of line\n",
-            "  -w, --words               output the word counts\n",
-            "      --locale <loc>        locale of number format: en, fr, ... posix\n",
-            "  -?, --query <q>           display available names of locale and exit\n",
-            "\n",
-            "  -H, --help        display this help and exit\n",
-            "  -V, --version     display version information and exit\n",
-            "  -X <x-options>    x options. try -X help\n",
-            "\n",
-            "Examples:\n",
-            "  Outputs the line count:\n",
-            "    echo -e \"acbde fghi\\njkln opqr\" | aki-stats -l\n",
-            "  Outputs the byte count:\n",
-            "    echo -e \"acbde fghi\\njkln opqr\" | aki-stats -b\n",
-            "  Outputs the word count:\n",
-            "    echo -e \"acbde fghi\\njkln opqr\" | aki-stats -w\n",
+            indoc::indoc!(
+                r#"
+            Usage:
+              aki-stats [options]
+
+            output the statistics of text, like a wc of linux command.
+
+            Options:
+              -a, --all                 output the all statistics of text, exclude ascii map
+              -b, --bytes               output the byte counts
+              -c, --chars               output the unicode character counts
+              -l, --lines               output the line counts
+                  --map-ascii           output the ascii map statistics
+              -m, --max-line-bytes      output the maximum byte counts of line
+              -w, --words               output the word counts
+                  --locale <loc>        locale of number format: en, fr, ... posix
+              -?, --query <q>           display available names of locale and exit
+
+              -H, --help        display this help and exit
+              -V, --version     display version information and exit
+              -X <x-options>    x options. try -X help
+
+            Examples:
+              Outputs the line count:
+                echo -e "acbde fghi\njkln opqr" | aki-stats -l
+              Outputs the byte count:
+                echo -e "acbde fghi\njkln opqr" | aki-stats -b
+              Outputs the word count:
+                echo -e "acbde fghi\njkln opqr" | aki-stats -w
+            "#
+            ),
             "\n",
         )
     };

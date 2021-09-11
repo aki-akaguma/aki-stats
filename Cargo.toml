@@ -1,6 +1,6 @@
 [package]
 name = "aki-stats"
-version = "0.1.12"
+version = "0.1.13"
 authors = ["aki <aki.akaguma@hotmail.com>"]
 description = """
 output the statistics of text, like a wc of linux command.
@@ -34,6 +34,8 @@ runnel = "0.3"
 memx-cdy = "0.1"
 
 [dev-dependencies]
+indoc = "1.0"
+exec-target = "0.2"
 
 [build-dependencies]
 rust-version-info-file = "0.1"
