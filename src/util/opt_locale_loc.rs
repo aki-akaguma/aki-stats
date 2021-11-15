@@ -1,7 +1,7 @@
 use num_format::{Locale, ToFormattedString};
 
 //{{{ OptLocaleLoc
-#[derive(Debug, PartialEq, Clone, Copy)]
+#[derive(Debug, Default, PartialEq, Clone, Copy)]
 pub struct OptLocaleLoc {
     inner: Option<Locale>,
 }
@@ -15,12 +15,6 @@ impl OptLocaleLoc {
         } else {
             v.to_formatted_string(&self.inner.unwrap())
         }
-    }
-}
-
-impl Default for OptLocaleLoc {
-    fn default() -> OptLocaleLoc {
-        OptLocaleLoc { inner: None }
     }
 }
 

@@ -12,23 +12,13 @@ pub fn run(sioe: &RunnelIoe, conf: &CmdOptConf) -> anyhow::Result<()> {
     r
 }
 
+#[derive(Default)]
 struct Stats {
     byte_count: u64,
     char_count: u64,
     line_count: u64,
     word_count: u64,
     max_line_bytes: u64,
-}
-impl std::default::Default for Stats {
-    fn default() -> Self {
-        Self {
-            byte_count: 0,
-            char_count: 0,
-            line_count: 0,
-            word_count: 0,
-            max_line_bytes: 0,
-        }
-    }
 }
 
 struct StatsAscii {
