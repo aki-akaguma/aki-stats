@@ -1,7 +1,7 @@
 use num_format::{Locale, ToFormattedString};
 
 //{{{ OptLocaleLoc
-#[derive(Debug, Default, PartialEq, Clone, Copy)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
 pub struct OptLocaleLoc {
     inner: Option<Locale>,
 }
