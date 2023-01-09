@@ -1,15 +1,23 @@
-TBD: aki-stats
-===
-Unreleased changes. Release notes have not yet been written.
+# Changelog: aki-stats
 
-* fix clippy: you are deriving `PartialEq` and can implement `Eq`
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased] *
+### Changed
+* reformat `CHANGELOG.md`
 * update depends: flood-tide-gen(0.1.17)
 * update depends: anyhow(1.0.62), libc(0.2.132), regex(1.6.0)
 * update depends: semver(1.0.13)
 
-0.1.16 (2022-06-18)
-=====
+### Fixed
+* fix clippy: you are deriving `PartialEq` and can implement `Eq`
 
+
+## [0.1.16] (2022-06-18)
+### Changed
 * changes to edition 2021
 * update depends: flood-tide(0.2.5)
 * update depends: memx(0.1.21), memx-cdy(0.1.8), runnel(0.3.11)
@@ -17,103 +25,122 @@ Unreleased changes. Release notes have not yet been written.
 * update depends: rust-version-info-file(v0.1.6)
 * update depends: semver(1.0.10)
 
-0.1.15 (2022-05-22)
-=====
-
+## [0.1.15] (2022-05-22)
+### Changed
 * update depends: runnel(0.3.10), memx(0.1.20)
 * update depends: anyhow(1.0.57), libc(0.2.126), regex(1.5.6)
 * update depends: exec-target(v0.2.5), rust-version-info-file(v0.1.5)
 
-0.1.14 (2021-11-15)
-=====
+## [0.1.14] (2021-11-15)
+### Added
+* more documents
 
+### Changed
 * minimum support rustc 1.47.0 (18bf6b4f0 2020-10-07)
-* add more documents
 * update depends: flood-tide(0.2.4), memx(0.1.18), memx-cdy(0.1.7), runnel(0.3.9)
 * update depends: anyhow(1.0.45), libc(0.2.107)
 * update depends: exec-target(v0.2.4), flood-tide-gen(0.1.15), rust-version-info-file(v0.1.3)
 
-0.1.13 (2021-09-11)
-=====
+## [0.1.13] (2021-09-11)
+### Added
+* depends: indoc(1.0.3)
 
+### Changed
 * pass cargo clippy
 * update depends: anyhow(1.0.43), flood-tide-gen(0.1.14), flood-tide(0.2.3), memx-cdy(0.1.6), runnel(0.3.8)
 * rewite TARGET_EXE_PATH with `env!(concat!("CARGO_BIN_EXE_", env!("CARGO_PKG_NAME")))`
 * update depends: exec-target(0.2.3)
-* add depends: indoc(1.0.3)
 
-0.1.12 (2021-06-24)
-=====
+## [0.1.12] (2021-06-24)
+### Added
+* `memx_cdy::memx_init(); // fast mem operation.`
 
-* add `memx_cdy::memx_init(); // fast mem operation.`
+### Changed
 * rewite TARGET_EXE_PATH with `env!("CARGO_BIN_EXE_aki-stats")`
-* bug fix: `#[cfg(feature = "debian_build")]`
 
-0.1.11 (2021-06-05)
-=====
+### Fixed
+* bug: `#[cfg(feature = "debian_build")]`
 
-* add command option: --map-ascii and -X map-ascii-rust-src
+## [0.1.11] (2021-06-05)
+### Added
+* command option: `--map-ascii` and `-X map-ascii-rust-src`
 
-0.1.10 (2021-06-03)
-=====
+## [0.1.10] (2021-06-03)
+### Added
+* support `features = \["debian_build"\]`
 
-* add support features = \["debian_build"\]
-* bug fix command option: -X rust-version-info
+### Changed
 * update depends: flood-tide(0.2.2)
 * update depends: regex(1.5.4)
 
-0.1.9 (2021-04-23)
-=====
+### Fixed
+* bug: command option: `-X rust-version-info`
 
-* fix build.rs
+## [0.1.9] (2021-04-23)
+### Fixed
+* bug: build.rs
 
-0.1.8 (2021-04-23)
-=====
+## [0.1.8] (2021-04-23)
+### Added
+* command option: `-X`
 
+### Changed
 * update depends: flood-tide-gen(0.1.12), flood-tide(0.2.1)
-* add command option: -X
 * update depends: bug fix: regex(1.4.6)
 
-0.1.7 (2021-04-19)
-=====
-
+## [0.1.7] (2021-04-19)
+### Changed
 * update depends: flood-tide-gen(0.1.10)
 
-0.1.6 (2021-04-07)
-=====
-
+## [0.1.6] (2021-04-07)
+### Changed
 * update depends: flood-tide(0.2)
 * update depends: anyhow(1.0.40), flood-tide-gen(0.1.8), runnnel(0.3.6)
 
-0.1.5 (2021-03-22)
-=====
+## [0.1.5] (2021-03-22)
+### Fixed
+* depends: unnecessary regex
 
-* fix depends: unnecessary regex
-
-0.1.4 (2021-03-14)
-=====
-
+## [0.1.4] (2021-03-14)
+### Changed
 * update crate: regex: fix memory leak
 
-0.1.3 (2021-03-08)
-=====
-
+## [0.1.3] (2021-03-08)
+### Changed
 * update crate: runnel
 * update crate: rustc_version ("0.3")
 
-0.1.2 (2021-03-08)
-=====
-
+## [0.1.2] (2021-03-08)
+### Changed
 * update crate: runnel
-* rename file: xtask/src/cmd.txt to xtask/src/aki-stats-cmd.txt
+* rename file: `xtask/src/cmd.txt` to `xtask/src/aki-stats-cmd.txt`
 
-0.1.1 (2021-03-04)
-=====
+## [0.1.1] (2021-03-04)
+### Added
+* command option: `--locale <loc>`
+* command option: `-?, --query <q>`
 
-* add --locale <loc> to options
-* add -?, --query <q> to options
+### Changed
 * change output plain numeric to locale numeric, fancy numeric format
 
-0.1.0 (2021-03-03)
-=====
-first commit
+## [0.1.0] (2021-03-03)
+* first commit
+
+[Unreleased]: https://github.com/aki-akaguma/aki-stats/compare/v0.1.16..HEAD
+[0.1.16]: https://github.com/aki-akaguma/aki-stats/compare/v0.1.15..v0.1.16
+[0.1.15]: https://github.com/aki-akaguma/aki-stats/compare/v0.1.14..v0.1.15
+[0.1.14]: https://github.com/aki-akaguma/aki-stats/compare/v0.1.13..v0.1.14
+[0.1.13]: https://github.com/aki-akaguma/aki-stats/compare/v0.1.12..v0.1.13
+[0.1.12]: https://github.com/aki-akaguma/aki-stats/compare/v0.1.11..v0.1.12
+[0.1.11]: https://github.com/aki-akaguma/aki-stats/compare/v0.1.10..v0.1.11
+[0.1.10]: https://github.com/aki-akaguma/aki-stats/compare/v0.1.9..v0.1.10
+[0.1.9]: https://github.com/aki-akaguma/aki-stats/compare/v0.1.8..v0.1.9
+[0.1.8]: https://github.com/aki-akaguma/aki-stats/compare/v0.1.7..v0.1.8
+[0.1.7]: https://github.com/aki-akaguma/aki-stats/compare/v0.1.6..v0.1.7
+[0.1.6]: https://github.com/aki-akaguma/aki-stats/compare/v0.1.5..v0.1.6
+[0.1.5]: https://github.com/aki-akaguma/aki-stats/compare/v0.1.4..v0.1.5
+[0.1.4]: https://github.com/aki-akaguma/aki-stats/compare/v0.1.3..v0.1.4
+[0.1.3]: https://github.com/aki-akaguma/aki-stats/compare/v0.1.2..v0.1.3
+[0.1.2]: https://github.com/aki-akaguma/aki-stats/compare/v0.1.1..v0.1.2
+[0.1.1]: https://github.com/aki-akaguma/aki-stats/compare/v0.1.0..v0.1.1
+[0.1.0]: https://github.com/aki-akaguma/aki-stats/releases/tag/v0.1.0
