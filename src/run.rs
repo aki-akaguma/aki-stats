@@ -149,11 +149,11 @@ fn run_0(sioe: &RunnelIoe, conf: &CmdOptConf) -> anyhow::Result<()> {
                 }
             }
             ascii_ctrl += map_ascii.get_count(0x7F);
-            vec.push(format!("ctrl: --: {}", ascii_ctrl));
-            //vec.push(format!("ctrl: lf: {}", ascii_ctrl_lf));
-            //vec.push(format!("ctrl: cr: {}", ascii_ctrl_cr));
-            vec.push(format!("ctrl: ht: {}", ascii_ctrl_ht));
-            vec.push(format!("ctrl: vt: {}", ascii_ctrl_vt));
+            vec.push(format!("ctrl: --: {ascii_ctrl}"));
+            //vec.push(format!("ctrl: lf: {ascii_ctrl_lf}"));
+            //vec.push(format!("ctrl: cr: {ascii_ctrl_cr}"));
+            vec.push(format!("ctrl: ht: {ascii_ctrl_ht}"));
+            vec.push(format!("ctrl: vt: {ascii_ctrl_vt}"));
 
             //
             vec.push(format!("0x20: SP: {}", map_ascii.get_count(0x20)));

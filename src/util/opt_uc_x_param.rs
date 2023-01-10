@@ -27,7 +27,7 @@ impl ::std::str::FromStr for OptUcXParam {
                 if let Some(stripped) = s.strip_prefix(bs) {
                     OptUcXParam::BaseDir(stripped.to_string())
                 } else {
-                    let s = format!("can not parse '{}'", s);
+                    let s = format!("can not parse '{s}'");
                     return Err(OptUcXParamParseError::new(s));
                 }
             }
@@ -45,7 +45,7 @@ impl ::std::fmt::Display for OptUcXParam {
             OptUcXParam::MapAsciiRustSrc => "map-ascii-rust-src",
             OptUcXParam::BaseDir(_) => "base_dir=",
         };
-        write!(f, "{}", s)
+        write!(f, "{s}")
     }
 }
 //}}} OptUcXParam

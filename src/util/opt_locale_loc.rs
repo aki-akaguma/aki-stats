@@ -29,7 +29,7 @@ impl ::std::str::FromStr for OptLocaleLoc {
                 Ok(loc) => Ok(Self { inner: Some(loc) }),
                 Err(err) => {
                     //let s = format!("can not parse '{}'", s);
-                    let s = format!("'{}': {}", s, err);
+                    let s = format!("'{s}': {err}");
                     Err(OptLocaleLocParseError::new(s))
                 }
             }

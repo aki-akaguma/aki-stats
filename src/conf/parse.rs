@@ -93,7 +93,7 @@ fn query_locale(_program: &str) -> String {
 
 #[rustfmt::skip]
 fn query_error(_program: &str, s: &str) -> String {
-    format!( "unknown query: {}\navailable query: locale", s)
+    format!( "unknown query: {s}\navailable query: locale")
 }
 
 //----------------------------------------------------------------------
