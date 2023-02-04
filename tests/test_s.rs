@@ -72,7 +72,9 @@ macro_rules! do_execute {
     ($args:expr, $sin:expr) => {{
         let sioe = RunnelIoe::new(
             Box::new(StringIn::with_str($sin)),
+            #[allow(clippy::box_default)]
             Box::new(StringOut::default()),
+            #[allow(clippy::box_default)]
             Box::new(StringErr::default()),
         );
         let program = env!("CARGO_PKG_NAME");
@@ -110,28 +112,28 @@ mod test_s0 {
         let (r, sioe) = do_execute!(&["-H"]);
         assert_eq!(buff!(sioe, serr), "");
         assert_eq!(buff!(sioe, sout), help_msg!());
-        assert_eq!(r.is_ok(), true);
+        assert!(r.is_ok());
     }
     #[test]
     fn test_help_long() {
         let (r, sioe) = do_execute!(&["--help"]);
         assert_eq!(buff!(sioe, serr), "");
         assert_eq!(buff!(sioe, sout), help_msg!());
-        assert_eq!(r.is_ok(), true);
+        assert!(r.is_ok());
     }
     #[test]
     fn test_version() {
         let (r, sioe) = do_execute!(&["-V"]);
         assert_eq!(buff!(sioe, serr), "");
         assert_eq!(buff!(sioe, sout), version_msg!());
-        assert_eq!(r.is_ok(), true);
+        assert!(r.is_ok());
     }
     #[test]
     fn test_version_long() {
         let (r, sioe) = do_execute!(&["--version"]);
         assert_eq!(buff!(sioe, serr), "");
         assert_eq!(buff!(sioe, sout), version_msg!());
-        assert_eq!(r.is_ok(), true);
+        assert!(r.is_ok());
     }
     #[test]
     fn test_non_option() {
@@ -147,7 +149,7 @@ mod test_s0 {
             )
         );
         assert_eq!(buff!(sioe, sout), "");
-        assert_eq!(r.is_ok(), false);
+        assert!(r.is_err());
     }
 }
 
@@ -194,7 +196,7 @@ mod test_s1 {
             buff!(sioe, sout),
             "lines:\"26\", bytes:\"1207\", chars:\"1207\", words:\"226\", max:\"83\"\n"
         );
-        assert_eq!(r.is_ok(), true);
+        assert!(r.is_ok());
     }
     //
     #[test]
@@ -202,7 +204,7 @@ mod test_s1 {
         let (r, sioe) = do_execute!(&["-l"], super::IN_DAT_1);
         assert_eq!(buff!(sioe, serr), "");
         assert_eq!(buff!(sioe, sout), "lines:\"26\"\n");
-        assert_eq!(r.is_ok(), true);
+        assert!(r.is_ok());
     }
     //
     #[test]
@@ -210,7 +212,7 @@ mod test_s1 {
         let (r, sioe) = do_execute!(&["-b"], super::IN_DAT_1);
         assert_eq!(buff!(sioe, serr), "");
         assert_eq!(buff!(sioe, sout), "bytes:\"1207\"\n");
-        assert_eq!(r.is_ok(), true);
+        assert!(r.is_ok());
     }
     //
     #[test]
@@ -218,7 +220,7 @@ mod test_s1 {
         let (r, sioe) = do_execute!(&["-c"], super::IN_DAT_1);
         assert_eq!(buff!(sioe, serr), "");
         assert_eq!(buff!(sioe, sout), "chars:\"1207\"\n");
-        assert_eq!(r.is_ok(), true);
+        assert!(r.is_ok());
     }
     //
     #[test]
@@ -226,7 +228,7 @@ mod test_s1 {
         let (r, sioe) = do_execute!(&["-w"], super::IN_DAT_1);
         assert_eq!(buff!(sioe, serr), "");
         assert_eq!(buff!(sioe, sout), "words:\"226\"\n");
-        assert_eq!(r.is_ok(), true);
+        assert!(r.is_ok());
     }
     //
     #[test]
@@ -234,7 +236,7 @@ mod test_s1 {
         let (r, sioe) = do_execute!(&["-l", "-m"], super::IN_DAT_1);
         assert_eq!(buff!(sioe, serr), "");
         assert_eq!(buff!(sioe, sout), "lines:\"26\", max:\"83\"\n");
-        assert_eq!(r.is_ok(), true);
+        assert!(r.is_ok());
     }
 }
 
@@ -252,7 +254,7 @@ mod test_s2 {
             buff!(sioe, sout),
             "lines:\"26\", bytes:\"1,207\", chars:\"1,207\", words:\"226\", max:\"83\"\n"
         );
-        assert_eq!(r.is_ok(), true);
+        assert!(r.is_ok());
     }
     //
     #[test]
@@ -263,7 +265,7 @@ mod test_s2 {
             buff!(sioe, sout),
             "lines:\"26\", bytes:\"1\u{202f}207\", chars:\"1\u{202f}207\", words:\"226\", max:\"83\"\n"
         );
-        assert_eq!(r.is_ok(), true);
+        assert!(r.is_ok());
     }
     //
     #[test]
@@ -274,6 +276,6 @@ mod test_s2 {
             buff!(sioe, sout),
             "lines:\"26\", bytes:\"1.207\", chars:\"1.207\", words:\"226\", max:\"83\"\n"
         );
-        assert_eq!(r.is_ok(), true);
+        assert!(r.is_ok());
     }
 }

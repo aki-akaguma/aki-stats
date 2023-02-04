@@ -1,4 +1,4 @@
-const TARGET_EXE_PATH: &'static str = env!(concat!("CARGO_BIN_EXE_", env!("CARGO_PKG_NAME")));
+const TARGET_EXE_PATH: &str = env!(concat!("CARGO_BIN_EXE_", env!("CARGO_PKG_NAME")));
 
 macro_rules! help_msg {
     () => {
@@ -63,39 +63,39 @@ macro_rules! version_msg {
 
 mod test_0 {
     use exec_target::exec_target;
-    const TARGET_EXE_PATH: &'static str = super::TARGET_EXE_PATH;
+    const TARGET_EXE_PATH: &str = super::TARGET_EXE_PATH;
     //
     #[test]
     fn test_help() {
-        let oup = exec_target(TARGET_EXE_PATH, &["-H"]);
+        let oup = exec_target(TARGET_EXE_PATH, ["-H"]);
         assert_eq!(oup.stderr, "");
         assert_eq!(oup.stdout, help_msg!());
-        assert_eq!(oup.status.success(), true);
+        assert!(oup.status.success());
     }
     #[test]
     fn test_help_long() {
-        let oup = exec_target(TARGET_EXE_PATH, &["--help"]);
+        let oup = exec_target(TARGET_EXE_PATH, ["--help"]);
         assert_eq!(oup.stderr, "");
         assert_eq!(oup.stdout, help_msg!());
-        assert_eq!(oup.status.success(), true);
+        assert!(oup.status.success());
     }
     #[test]
     fn test_version() {
-        let oup = exec_target(TARGET_EXE_PATH, &["-V"]);
+        let oup = exec_target(TARGET_EXE_PATH, ["-V"]);
         assert_eq!(oup.stderr, "");
         assert_eq!(oup.stdout, version_msg!());
-        assert_eq!(oup.status.success(), true);
+        assert!(oup.status.success());
     }
     #[test]
     fn test_version_long() {
-        let oup = exec_target(TARGET_EXE_PATH, &["--version"]);
+        let oup = exec_target(TARGET_EXE_PATH, ["--version"]);
         assert_eq!(oup.stderr, "");
         assert_eq!(oup.stdout, version_msg!());
-        assert_eq!(oup.status.success(), true);
+        assert!(oup.status.success());
     }
     #[test]
     fn test_non_option() {
-        let oup = exec_target(TARGET_EXE_PATH, &[""]);
+        let oup = exec_target(TARGET_EXE_PATH, [""]);
         assert_eq!(
             oup.stderr,
             concat!(
@@ -107,7 +107,7 @@ mod test_0 {
             )
         );
         assert_eq!(oup.stdout, "");
-        assert_eq!(oup.status.success(), false);
+        assert!(!oup.status.success());
     }
 } // mod test_0
 
@@ -142,69 +142,69 @@ A proposition which I took the liberty of doubting.
 
 mod test_1 {
     use exec_target::exec_target_with_in;
-    const TARGET_EXE_PATH: &'static str = super::TARGET_EXE_PATH;
+    const TARGET_EXE_PATH: &str = super::TARGET_EXE_PATH;
     //
     #[test]
     fn test_t0() {
-        let oup = exec_target_with_in(TARGET_EXE_PATH, &["-a"], super::IN_DAT_1.as_bytes());
+        let oup = exec_target_with_in(TARGET_EXE_PATH, ["-a"], super::IN_DAT_1.as_bytes());
         assert_eq!(oup.stderr, "");
         assert_eq!(
             oup.stdout,
             "lines:\"26\", bytes:\"1207\", chars:\"1207\", words:\"226\", max:\"83\"\n"
         );
-        assert_eq!(oup.status.success(), true);
+        assert!(oup.status.success());
     }
     //
     #[test]
     fn test_t1() {
-        let oup = exec_target_with_in(TARGET_EXE_PATH, &["-l"], super::IN_DAT_1.as_bytes());
+        let oup = exec_target_with_in(TARGET_EXE_PATH, ["-l"], super::IN_DAT_1.as_bytes());
         assert_eq!(oup.stderr, "");
         assert_eq!(oup.stdout, "lines:\"26\"\n");
-        assert_eq!(oup.status.success(), true);
+        assert!(oup.status.success());
     }
     //
     #[test]
     fn test_t2() {
-        let oup = exec_target_with_in(TARGET_EXE_PATH, &["-b"], super::IN_DAT_1.as_bytes());
+        let oup = exec_target_with_in(TARGET_EXE_PATH, ["-b"], super::IN_DAT_1.as_bytes());
         assert_eq!(oup.stderr, "");
         assert_eq!(oup.stdout, "bytes:\"1207\"\n");
-        assert_eq!(oup.status.success(), true);
+        assert!(oup.status.success());
     }
     //
     #[test]
     fn test_t3() {
-        let oup = exec_target_with_in(TARGET_EXE_PATH, &["-c"], super::IN_DAT_1.as_bytes());
+        let oup = exec_target_with_in(TARGET_EXE_PATH, ["-c"], super::IN_DAT_1.as_bytes());
         assert_eq!(oup.stderr, "");
         assert_eq!(oup.stdout, "chars:\"1207\"\n");
-        assert_eq!(oup.status.success(), true);
+        assert!(oup.status.success());
     }
     //
     #[test]
     fn test_t4() {
-        let oup = exec_target_with_in(TARGET_EXE_PATH, &["-w"], super::IN_DAT_1.as_bytes());
+        let oup = exec_target_with_in(TARGET_EXE_PATH, ["-w"], super::IN_DAT_1.as_bytes());
         assert_eq!(oup.stderr, "");
         assert_eq!(oup.stdout, "words:\"226\"\n");
-        assert_eq!(oup.status.success(), true);
+        assert!(oup.status.success());
     }
     //
     #[test]
     fn test_t5() {
-        let oup = exec_target_with_in(TARGET_EXE_PATH, &["-l", "-m"], super::IN_DAT_1.as_bytes());
+        let oup = exec_target_with_in(TARGET_EXE_PATH, ["-l", "-m"], super::IN_DAT_1.as_bytes());
         assert_eq!(oup.stderr, "");
         assert_eq!(oup.stdout, "lines:\"26\", max:\"83\"\n");
-        assert_eq!(oup.status.success(), true);
+        assert!(oup.status.success());
     }
 }
 
 mod test_2 {
     use exec_target::exec_target_with_in;
-    const TARGET_EXE_PATH: &'static str = super::TARGET_EXE_PATH;
+    const TARGET_EXE_PATH: &str = super::TARGET_EXE_PATH;
     //
     #[test]
     fn test_t0_en() {
         let oup = exec_target_with_in(
             TARGET_EXE_PATH,
-            &["-a", "--locale", "en"],
+            ["-a", "--locale", "en"],
             super::IN_DAT_1.as_bytes(),
         );
         assert_eq!(oup.stderr, "");
@@ -212,14 +212,14 @@ mod test_2 {
             oup.stdout,
             "lines:\"26\", bytes:\"1,207\", chars:\"1,207\", words:\"226\", max:\"83\"\n"
         );
-        assert_eq!(oup.status.success(), true);
+        assert!(oup.status.success());
     }
     //
     #[test]
     fn test_t0_fr() {
         let oup = exec_target_with_in(
             TARGET_EXE_PATH,
-            &["-a", "--locale", "fr"],
+            ["-a", "--locale", "fr"],
             super::IN_DAT_1.as_bytes(),
         );
         assert_eq!(oup.stderr, "");
@@ -227,14 +227,14 @@ mod test_2 {
             oup.stdout,
             "lines:\"26\", bytes:\"1\u{202f}207\", chars:\"1\u{202f}207\", words:\"226\", max:\"83\"\n"
         );
-        assert_eq!(oup.status.success(), true);
+        assert!(oup.status.success());
     }
     //
     #[test]
     fn test_t0_de() {
         let oup = exec_target_with_in(
             TARGET_EXE_PATH,
-            &["-a", "--locale", "de"],
+            ["-a", "--locale", "de"],
             super::IN_DAT_1.as_bytes(),
         );
         assert_eq!(oup.stderr, "");
@@ -242,6 +242,6 @@ mod test_2 {
             oup.stdout,
             "lines:\"26\", bytes:\"1.207\", chars:\"1.207\", words:\"226\", max:\"83\"\n"
         );
-        assert_eq!(oup.status.success(), true);
+        assert!(oup.status.success());
     }
 }
