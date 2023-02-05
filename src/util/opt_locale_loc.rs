@@ -83,17 +83,17 @@ mod tests {
     #[test]
     fn test_display_c() {
         let loc = OptLocaleLoc::from_str("C").unwrap();
-        assert_eq!(format!("{}", loc), "C");
+        assert_eq!(format!("{loc}"), "C");
     }
     #[test]
     fn test_display_en() {
         let loc = OptLocaleLoc::from_str("en").unwrap();
-        assert_eq!(format!("{}", loc), "en");
+        assert_eq!(format!("{loc}"), "en");
     }
     #[test]
     fn test_display_fr() {
         let loc = OptLocaleLoc::from_str("fr").unwrap();
-        assert_eq!(format!("{}", loc), "fr");
+        assert_eq!(format!("{loc}"), "fr");
     }
     #[test]
     fn test_from_str_invalid() {
