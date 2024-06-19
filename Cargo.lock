@@ -23,7 +23,6 @@ dependencies = [
  "num-format",
  "runnel",
  "rust-version-info-file",
- "rustc_version",
 ]
 
 [[package]]
