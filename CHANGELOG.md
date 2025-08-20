@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * minimum support: rustc 1.63.0
 
 ### Fixed
+* `clippy::derivable_impls`
 * `clippy::useless_format`
 
 

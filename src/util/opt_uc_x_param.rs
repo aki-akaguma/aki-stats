@@ -1,17 +1,12 @@
 //{{{ OptUcXParam
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Default, Clone, PartialEq, Eq)]
 pub enum OptUcXParam {
+    #[default]
     Void,
     Help,
     RustVersionInfo,
     BaseDir(String),
     MapAsciiRustSrc,
-}
-
-impl Default for OptUcXParam {
-    fn default() -> OptUcXParam {
-        OptUcXParam::Void
-    }
 }
 
 impl ::std::str::FromStr for OptUcXParam {
