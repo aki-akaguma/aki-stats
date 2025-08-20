@@ -13,7 +13,7 @@ output the statistics of text, like a wc of linux command.
 ## Features
 
 - output the statistics of text, like a wc of linux command.
-- minimum support rustc 1.58.1 (db9d1b20b 2022-01-20)
+- minimum support rustc 1.63.0 (4b91a6ea7 2022-08-08)
 
 ## Command help
 
@@ -136,7 +136,7 @@ at your option.
 [crate-link]: https://crates.io/crates/aki-stats
 [docs-image]: https://docs.rs/aki-stats/badge.svg
 [docs-link]: https://docs.rs/aki-stats/
-[rustc-image]: https://img.shields.io/badge/rustc-1.58+-blue.svg
+[rustc-image]: https://img.shields.io/badge/rustc-1.63+-blue.svg
 [license-image]: https://img.shields.io/badge/license-Apache2.0/MIT-blue.svg
 [test-ubuntu-image]: https://github.com/aki-akaguma/aki-stats/actions/workflows/test-ubuntu.yml/badge.svg
 [test-ubuntu-link]: https://github.com/aki-akaguma/aki-stats/actions/workflows/test-ubuntu.yml

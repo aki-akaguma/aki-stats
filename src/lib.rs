@@ -4,7 +4,7 @@ output the statistics of text, like a wc of linux command.
 # Features
 
 - output the statistics of text, like a wc of linux command.
-- minimum support rustc 1.58.1 (db9d1b20b 2022-01-20)
+- minimum support rustc 1.63.0 (4b91a6ea7 2022-08-08)
 
 # Command help
 
