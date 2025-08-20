@@ -2,7 +2,6 @@ use crate::conf::CmdOptConf;
 use crate::util::err::BrokenPipeError;
 use runnel::RunnelIoe;
 use std::fmt::Write as FmtWrite;
-use std::io::{BufRead, Write};
 
 pub fn run(sioe: &RunnelIoe, conf: &CmdOptConf) -> anyhow::Result<()> {
     let r = run_0(sioe, conf);
@@ -61,37 +60,11 @@ fn run_0(sioe: &RunnelIoe, conf: &CmdOptConf) -> anyhow::Result<()> {
         StatsAscii::default()
     };
     // input
-    for line in sioe.pin().lock().lines() {
+    for line in sioe.pg_in().lines() {
         let line_s = line?;
         let line_ss = line_s.as_str();
-        let line_len: usize = line_ss.len();
         //
-        stats.line_count += 1;
-        //
-        let line_bytes = line_len as u64;
-        if conf.flg_bytes {
-            stats.byte_count += line_bytes;
-        }
-        if conf.flg_max_line_bytes {
-            stats.max_line_bytes = stats.max_line_bytes.max(line_bytes);
-        }
-        //
-        if conf.flg_chars || conf.flg_words {
-            let mut prev_c: char = ' ';
-            for c in line_ss.chars() {
-                stats.char_count += 1;
-                if prev_c.is_ascii_whitespace() && !c.is_ascii_whitespace() {
-                    stats.word_count += 1;
-                }
-                prev_c = c;
-            }
-        }
-        //
-        if conf.flg_map_ascii {
-            for b in line_ss.as_bytes() {
-                map_ascii.count_up(*b);
-            }
-        }
+        run_00(conf, line_ss, &mut stats, &mut map_ascii)?;
     }
     // output
     {
@@ -112,9 +85,8 @@ fn run_0(sioe: &RunnelIoe, conf: &CmdOptConf) -> anyhow::Result<()> {
             vec.push(my_formatted(conf, "max", stats.max_line_bytes)?);
         }
         //
-        let mut o = sioe.pout().lock();
-        o.write_fmt(format_args!("{}\n", vec.join(", ")))?;
-        o.flush()?;
+        sioe.pg_out().write_line(vec.join(", ").to_string())?;
+        sioe.pg_out().flush_line()?;
     }
     if conf.flg_map_ascii {
         let mut vec: Vec<String> = Vec::new();
@@ -126,12 +98,11 @@ fn run_0(sioe: &RunnelIoe, conf: &CmdOptConf) -> anyhow::Result<()> {
                 vec.push(format!("{}", val as u8));
             }
             //
-            let mut o = sioe.pout().lock();
-            o.write_fmt(format_args!(
-                "const ASCII_STOCHAS: [u8;128] = [{}];\n",
+            sioe.pg_out().write_line(format!(
+                "const ASCII_STOCHAS: [u8;128] = [{}];",
                 vec.join(", ")
             ))?;
-            o.flush()?;
+            sioe.pg_out().flush_line()?;
         } else {
             let mut ascii_ctrl: u64 = 0;
             let mut ascii_ctrl_ht: u64 = 0;
@@ -166,12 +137,51 @@ fn run_0(sioe: &RunnelIoe, conf: &CmdOptConf) -> anyhow::Result<()> {
                 ));
             }
             //
-            let mut o = sioe.pout().lock();
-            o.write_fmt(format_args!("{}\n", vec.join("\n")))?;
-            o.flush()?;
+            vec.reverse();
+            while let Some(v) = vec.pop() {
+                sioe.pg_out().write_line(v)?;
+            }
+            sioe.pg_out().flush_line()?;
         }
     }
     //
+    Ok(())
+}
+
+fn run_00(
+    conf: &CmdOptConf,
+    line_ss: &str,
+    stats: &mut Stats,
+    map_ascii: &mut StatsAscii,
+) -> anyhow::Result<()> {
+    let line_len: usize = line_ss.len();
+    //
+    stats.line_count += 1;
+    //
+    let line_bytes = line_len as u64;
+    if conf.flg_bytes {
+        stats.byte_count += line_bytes;
+    }
+    if conf.flg_max_line_bytes {
+        stats.max_line_bytes = stats.max_line_bytes.max(line_bytes);
+    }
+    //
+    if conf.flg_chars || conf.flg_words {
+        let mut prev_c: char = ' ';
+        for c in line_ss.chars() {
+            stats.char_count += 1;
+            if prev_c.is_ascii_whitespace() && !c.is_ascii_whitespace() {
+                stats.word_count += 1;
+            }
+            prev_c = c;
+        }
+    }
+    //
+    if conf.flg_map_ascii {
+        for b in line_ss.as_bytes() {
+            map_ascii.count_up(*b);
+        }
+    }
     Ok(())
 }
 
