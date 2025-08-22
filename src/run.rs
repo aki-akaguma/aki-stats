@@ -68,81 +68,22 @@ fn run_0(sioe: &RunnelIoe, conf: &CmdOptConf) -> anyhow::Result<()> {
     }
     // output
     {
-        let mut vec: Vec<String> = Vec::new();
-        if conf.flg_lines {
-            vec.push(my_formatted(conf, "lines", stats.line_count)?);
-        }
-        if conf.flg_bytes {
-            vec.push(my_formatted(conf, "bytes", stats.byte_count)?);
-        }
-        if conf.flg_chars {
-            vec.push(my_formatted(conf, "chars", stats.char_count)?);
-        }
-        if conf.flg_words {
-            vec.push(my_formatted(conf, "words", stats.word_count)?);
-        }
-        if conf.flg_max_line_bytes {
-            vec.push(my_formatted(conf, "max", stats.max_line_bytes)?);
-        }
-        //
-        sioe.pg_out().write_line(vec.join(", ").to_string())?;
+        let out_s = make_out_s_from_stats(conf, &stats)?;
+        sioe.pg_out().write_line(out_s)?;
         sioe.pg_out().flush_line()?;
     }
     if conf.flg_map_ascii {
-        let mut vec: Vec<String> = Vec::new();
         if conf.is_opt_uc_x_map_ascii_rust_src() {
-            let max_val = map_ascii.max();
-            for i in 0x00..0x80 {
-                let val = map_ascii.get_count(i);
-                let val = val * 255 / max_val;
-                vec.push(format!("{}", val as u8));
-            }
-            //
-            sioe.pg_out().write_line(format!(
-                "const ASCII_STOCHAS: [u8;128] = [{}];",
-                vec.join(", ")
-            ))?;
-            sioe.pg_out().flush_line()?;
+            let out_s = make_out_s_from_map_ascii_1(&map_ascii)?;
+            sioe.pg_out().write_line(out_s)?;
         } else {
-            let mut ascii_ctrl: u64 = 0;
-            let mut ascii_ctrl_ht: u64 = 0;
-            let mut ascii_ctrl_vt: u64 = 0;
-            //let mut ascii_ctrl_lf: u64 = 0;
-            //let mut ascii_ctrl_cr: u64 = 0;
-            for i in 0..0x1F {
-                let val = map_ascii.get_count(i);
-                match i {
-                    0x09 => ascii_ctrl_ht = val,
-                    0x0B => ascii_ctrl_vt = val,
-                    //0x0A => ascii_ctrl_lf = val,
-                    //0x0D => ascii_ctrl_cr = val,
-                    _ => ascii_ctrl += val,
-                }
-            }
-            ascii_ctrl += map_ascii.get_count(0x7F);
-            vec.push(format!("ctrl: --: {ascii_ctrl}"));
-            //vec.push(format!("ctrl: lf: {ascii_ctrl_lf}"));
-            //vec.push(format!("ctrl: cr: {ascii_ctrl_cr}"));
-            vec.push(format!("ctrl: ht: {ascii_ctrl_ht}"));
-            vec.push(format!("ctrl: vt: {ascii_ctrl_vt}"));
-
-            //
-            vec.push(format!("0x20: SP: {}", map_ascii.get_count(0x20)));
-            for i in 0x21..0x7F {
-                vec.push(format!(
-                    "0x{:02x}:  {}: {}",
-                    i,
-                    i as u8 as char,
-                    map_ascii.get_count(i)
-                ));
-            }
-            //
+            let mut vec = make_out_s_from_map_ascii_2(&map_ascii)?;
             vec.reverse();
             while let Some(v) = vec.pop() {
                 sioe.pg_out().write_line(v)?;
             }
-            sioe.pg_out().flush_line()?;
         }
+        sioe.pg_out().flush_line()?;
     }
     //
     Ok(())
@@ -165,7 +106,6 @@ fn run_00(
     if conf.flg_max_line_bytes {
         stats.max_line_bytes = stats.max_line_bytes.max(line_bytes);
     }
-    //
     if conf.flg_chars || conf.flg_words {
         let mut prev_c: char = ' ';
         for c in line_ss.chars() {
@@ -176,13 +116,32 @@ fn run_00(
             prev_c = c;
         }
     }
-    //
     if conf.flg_map_ascii {
         for b in line_ss.as_bytes() {
             map_ascii.count_up(*b);
         }
     }
     Ok(())
+}
+
+fn make_out_s_from_stats(conf: &CmdOptConf, stats: &Stats) -> anyhow::Result<String> {
+    let mut vec: Vec<String> = Vec::new();
+    if conf.flg_lines {
+        vec.push(my_formatted(conf, "lines", stats.line_count)?);
+    }
+    if conf.flg_bytes {
+        vec.push(my_formatted(conf, "bytes", stats.byte_count)?);
+    }
+    if conf.flg_chars {
+        vec.push(my_formatted(conf, "chars", stats.char_count)?);
+    }
+    if conf.flg_words {
+        vec.push(my_formatted(conf, "words", stats.word_count)?);
+    }
+    if conf.flg_max_line_bytes {
+        vec.push(my_formatted(conf, "max", stats.max_line_bytes)?);
+    }
+    Ok(vec.join(", ").to_string())
 }
 
 fn my_formatted(conf: &CmdOptConf, label: &str, num: u64) -> anyhow::Result<String> {
@@ -193,4 +152,55 @@ fn my_formatted(conf: &CmdOptConf, label: &str, num: u64) -> anyhow::Result<Stri
         conf.opt_locale.formatted_string(num)
     ))?;
     Ok(s)
+}
+
+fn make_out_s_from_map_ascii_1(map_ascii: &StatsAscii) -> anyhow::Result<String> {
+    let mut vec: Vec<String> = Vec::new();
+    let max_val = map_ascii.max();
+    for i in 0x00..0x80 {
+        let val = map_ascii.get_count(i);
+        let val = val * 255 / max_val;
+        vec.push(format!("{}", val as u8));
+    }
+    //
+    Ok(format!(
+        "const ASCII_STOCHAS: [u8;128] = [{}];",
+        vec.join(", ")
+    ))
+}
+
+fn make_out_s_from_map_ascii_2(map_ascii: &StatsAscii) -> anyhow::Result<Vec<String>> {
+    let mut vec: Vec<String> = Vec::new();
+    let mut ascii_ctrl: u64 = 0;
+    let mut ascii_ctrl_ht: u64 = 0;
+    let mut ascii_ctrl_vt: u64 = 0;
+    //let mut ascii_ctrl_lf: u64 = 0;
+    //let mut ascii_ctrl_cr: u64 = 0;
+    for i in 0..0x1F {
+        let val = map_ascii.get_count(i);
+        match i {
+            0x09 => ascii_ctrl_ht = val,
+            0x0B => ascii_ctrl_vt = val,
+            //0x0A => ascii_ctrl_lf = val,
+            //0x0D => ascii_ctrl_cr = val,
+            _ => ascii_ctrl += val,
+        }
+    }
+    ascii_ctrl += map_ascii.get_count(0x7F);
+    vec.push(format!("ctrl: --: {ascii_ctrl}"));
+    //vec.push(format!("ctrl: lf: {ascii_ctrl_lf}"));
+    //vec.push(format!("ctrl: cr: {ascii_ctrl_cr}"));
+    vec.push(format!("ctrl: ht: {ascii_ctrl_ht}"));
+    vec.push(format!("ctrl: vt: {ascii_ctrl_vt}"));
+    //
+    vec.push(format!("0x20: SP: {}", map_ascii.get_count(0x20)));
+    for i in 0x21..0x7F {
+        vec.push(format!(
+            "0x{:02x}:  {}: {}",
+            i,
+            i as u8 as char,
+            map_ascii.get_count(i)
+        ));
+    }
+    Ok(vec)
 }
