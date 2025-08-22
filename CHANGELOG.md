@@ -9,12 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 * updated: runnel(0.4.0)
 * updated: rust-version-info-file(0.2)
-* minimum support: rustc 1.63.0
+* minimum support: rustc 1.65.0
 
 ### Fixed
 * `clippy::derivable_impls`
 * `clippy::useless_format`
-
+* minimum support version in doc
 
 ## [0.1.18] (2024-06-19)
 ### Added
