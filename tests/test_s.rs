@@ -1,62 +1,3 @@
-macro_rules! help_msg {
-    () => {
-        concat!(
-            version_msg!(),
-            "\n",
-            indoc::indoc!(
-                r#"
-            Usage:
-              aki-stats [options]
-
-            output the statistics of text, like a wc of linux command.
-
-            Options:
-              -a, --all                 output the all statistics of text, exclude ascii map
-              -b, --bytes               output the byte counts
-              -c, --chars               output the unicode character counts
-              -l, --lines               output the line counts
-                  --map-ascii           output the ascii map statistics
-              -m, --max-line-bytes      output the maximum byte counts of line
-              -w, --words               output the word counts
-                  --locale <loc>        locale of number format: en, fr, ... posix
-              -?, --query <q>           display available names of locale and exit
-
-              -H, --help        display this help and exit
-              -V, --version     display version information and exit
-              -X <x-options>    x options. try -X help
-
-            Examples:
-              Outputs the line count:
-                echo -e "acbde fghi\njkln opqr" | aki-stats -l
-              Outputs the byte count:
-                echo -e "acbde fghi\njkln opqr" | aki-stats -b
-              Outputs the word count:
-                echo -e "acbde fghi\njkln opqr" | aki-stats -w
-            "#
-            ),
-            "\n",
-        )
-    };
-}
-
-macro_rules! try_help_msg {
-    () => {
-        "Try --help for help.\n"
-    };
-}
-
-macro_rules! program_name {
-    () => {
-        "aki-stats"
-    };
-}
-
-macro_rules! version_msg {
-    () => {
-        concat!(program_name!(), " ", env!("CARGO_PKG_VERSION"), "\n")
-    };
-}
-
 /*
 macro_rules! fixture_text10k {
     () => {
@@ -64,6 +5,8 @@ macro_rules! fixture_text10k {
     };
 }
 */
+#[macro_use]
+mod helper;
 
 macro_rules! do_execute {
     ($args:expr) => {
@@ -101,7 +44,7 @@ macro_rules! buff {
     };
 }
 
-mod test_s0 {
+mod test_0_s {
     use libaki_stats::*;
     use runnel::medium::stringio::{StringErr, StringIn, StringOut};
     use runnel::RunnelIoe;
@@ -136,6 +79,22 @@ mod test_s0 {
         assert!(r.is_ok());
     }
     #[test]
+    fn test_invalid_opt() {
+        let (r, sioe) = do_execute!(&["-z"]);
+        assert_eq!(
+            buff!(sioe, serr),
+            concat!(
+                program_name!(),
+                ": ",
+                "Invalid option: z\n",
+                "Missing option: b, c, l, w, a or --map-ascii\n",
+                try_help_msg!()
+            )
+        );
+        assert_eq!(buff!(sioe, sout), "");
+        assert!(r.is_err());
+    }
+    #[test]
     fn test_non_option() {
         let (r, sioe) = do_execute!(&[""]);
         #[rustfmt::skip]
@@ -150,6 +109,205 @@ mod test_s0 {
         );
         assert_eq!(buff!(sioe, sout), "");
         assert!(r.is_err());
+    }
+}
+
+mod test_0_x_options_s {
+    use libaki_stats::*;
+    use runnel::medium::stringio::*;
+    use runnel::*;
+    //
+    #[test]
+    fn test_x_rust_version_info() {
+        let (r, sioe) = do_execute!(["-X", "rust-version-info"]);
+        assert_eq!(buff!(sioe, serr), "");
+        assert!(!buff!(sioe, sout).is_empty());
+        assert!(r.is_ok());
+    }
+    //
+    #[test]
+    fn test_x_option_help() {
+        let (r, sioe) = do_execute!(["-X", "help"]);
+        assert_eq!(buff!(sioe, serr), "");
+        assert!(buff!(sioe, sout).contains("Options:"));
+        assert!(buff!(sioe, sout).contains("-X rust-version-info"));
+        assert!(r.is_ok());
+    }
+    //
+    #[test]
+    fn test_x_option_rust_version_info() {
+        let (r, sioe) = do_execute!(["-X", "rust-version-info"]);
+        assert_eq!(buff!(sioe, serr), "");
+        assert!(buff!(sioe, sout).contains("rustc"));
+        assert!(r.is_ok());
+    }
+    //
+    #[test]
+    fn test_multiple_x_options() {
+        let (r, sioe) = do_execute!(["-X", "help", "-X", "rust-version-info"]);
+        assert_eq!(buff!(sioe, serr), "");
+        // The first one should be executed and the program should exit.
+        assert!(buff!(sioe, sout).contains("Options:"));
+        assert!(!buff!(sioe, sout).contains("rustc"));
+        assert!(r.is_ok());
+    }
+}
+
+mod test_1_s {
+    use libaki_stats::*;
+    use runnel::medium::stringio::{StringErr, StringIn, StringOut};
+    use runnel::RunnelIoe;
+    use std::io::Write;
+    //
+    #[test]
+    fn test_non_option() {
+        let (r, sioe) = do_execute!([""]);
+        #[rustfmt::skip]
+        assert_eq!(
+            buff!(sioe, serr),
+            concat!(
+                program_name!(), ": ",
+                "Missing option: b, c, l, w, a or --map-ascii\n",
+                "Unexpected argument: \n",
+                try_help_msg!()
+            )
+        );
+        assert_eq!(buff!(sioe, sout), "");
+        assert!(r.is_err());
+    }
+    /*
+    #[test]
+    fn test_invalid_utf8() {
+        let v = {
+            use std::io::Read;
+            let mut f = std::fs::File::open(fixture_invalid_utf8!()).unwrap();
+            let mut v = Vec::new();
+            f.read_to_end(&mut v).unwrap();
+            v
+        };
+        let (r, sioe) = do_execute!(["-h", "10"], &v);
+        assert_eq!(
+            buff!(sioe, serr),
+            concat!(program_name!(), ": stream did not contain valid UTF-8\n",)
+        );
+        assert_eq!(buff!(sioe, sout), "");
+        assert!(r.is_err());
+    }
+    */
+    //
+    #[test]
+    fn test_empty_input() {
+        let (r, sioe) = do_execute!(["-a"], "");
+        assert_eq!(buff!(sioe, serr), "");
+        assert_eq!(
+            buff!(sioe, sout),
+            "lines:\"0\", bytes:\"0\", chars:\"0\", words:\"0\", max:\"0\"\n"
+        );
+        assert!(r.is_ok());
+    }
+    //
+    #[test]
+    fn test_only_newlines() {
+        let (r, sioe) = do_execute!(["-a"], "\n\n\n");
+        assert_eq!(buff!(sioe, serr), "");
+        assert_eq!(
+            buff!(sioe, sout),
+            "lines:\"3\", bytes:\"0\", chars:\"0\", words:\"0\", max:\"0\"\n"
+        );
+        assert!(r.is_ok());
+    }
+    //
+    #[test]
+    fn test_combined_flags() {
+        let (r, sioe) = do_execute!(["-l", "-w"], "hello world\n");
+        assert_eq!(buff!(sioe, serr), "");
+        assert_eq!(buff!(sioe, sout), "lines:\"1\", words:\"2\"\n");
+        assert!(r.is_ok());
+    }
+    //
+    #[test]
+    fn test_crlf_line_endings() {
+        let (r, sioe) = do_execute!(["-a"], "line1\r\nline2\r\n");
+        assert_eq!(buff!(sioe, serr), "");
+        assert_eq!(
+            buff!(sioe, sout),
+            "lines:\"2\", bytes:\"10\", chars:\"10\", words:\"2\", max:\"5\"\n"
+        );
+        assert!(r.is_ok());
+    }
+    //
+    #[test]
+    fn test_word_separators() {
+        let (r, sioe) = do_execute!(["-w"], "word1  word2   word3\n");
+        assert_eq!(buff!(sioe, serr), "");
+        assert_eq!(buff!(sioe, sout), "words:\"3\"\n");
+        assert!(r.is_ok());
+    }
+    //
+    #[test]
+    fn test_mixed_line_endings() {
+        let input = "line1\nline2\r\nline3\n";
+        let (r, sioe) = do_execute!(["-a"], input);
+        assert_eq!(buff!(sioe, serr), "");
+        assert_eq!(
+            buff!(sioe, sout),
+            "lines:\"3\", bytes:\"15\", chars:\"15\", words:\"3\", max:\"5\"\n"
+        );
+        assert!(r.is_ok());
+    }
+    //
+    #[test]
+    fn test_leading_trailing_whitespace() {
+        let input = "  word1  \n\tword2\t\n";
+        let (r, sioe) = do_execute!(["-a"], input);
+        assert_eq!(buff!(sioe, serr), "");
+        assert_eq!(
+            buff!(sioe, sout),
+            "lines:\"2\", bytes:\"16\", chars:\"16\", words:\"2\", max:\"9\"\n"
+        );
+        assert!(r.is_ok());
+    }
+    //
+    #[test]
+    fn test_word_counting_with_punctuation() {
+        let input = "hello, world! one-two three.four\n";
+        let (r, sioe) = do_execute!(["-w"], input);
+        assert_eq!(buff!(sioe, serr), "");
+        assert_eq!(buff!(sioe, sout), "words:\"4\"\n");
+        assert!(r.is_ok());
+    }
+    //
+    #[test]
+    fn test_long_line() {
+        let input = "a".repeat(10000);
+        let (r, sioe) = do_execute!(["-a"], &input);
+        assert_eq!(buff!(sioe, serr), "");
+        assert_eq!(
+            buff!(sioe, sout),
+            "lines:\"1\", bytes:\"10000\", chars:\"10000\", words:\"1\", max:\"10000\"\n"
+        );
+        assert!(r.is_ok());
+    }
+    //
+    #[test]
+    fn test_no_newline_at_end() {
+        let input = "hello world";
+        let (r, sioe) = do_execute!(["-a"], input);
+        assert_eq!(buff!(sioe, serr), "");
+        assert_eq!(
+            buff!(sioe, sout),
+            "lines:\"1\", bytes:\"11\", chars:\"11\", words:\"2\", max:\"11\"\n"
+        );
+        assert!(r.is_ok());
+    }
+    //
+    #[test]
+    fn test_mixed_separators() {
+        let input = "word1 	 word2  word3\n";
+        let (r, sioe) = do_execute!(["-w"], input);
+        assert_eq!(buff!(sioe, serr), "");
+        assert_eq!(buff!(sioe, sout), "words:\"3\"\n");
+        assert!(r.is_ok());
     }
 }
 
@@ -182,7 +340,7 @@ which is always far more daring than any effort of the imagination.
 A proposition which I took the liberty of doubting.
 ";
 
-mod test_s1 {
+mod test_1_more_s {
     use libaki_stats::*;
     use runnel::medium::stringio::{StringErr, StringIn, StringOut};
     use runnel::RunnelIoe;
@@ -240,7 +398,7 @@ mod test_s1 {
     }
 }
 
-mod test_s2 {
+mod test_2_s {
     use libaki_stats::*;
     use runnel::medium::stringio::{StringErr, StringIn, StringOut};
     use runnel::RunnelIoe;
@@ -275,6 +433,116 @@ mod test_s2 {
         assert_eq!(
             buff!(sioe, sout),
             "lines:\"26\", bytes:\"1.207\", chars:\"1.207\", words:\"226\", max:\"83\"\n"
+        );
+        assert!(r.is_ok());
+    }
+}
+
+mod test_4_query_locale {
+    use libaki_stats::*;
+    use runnel::medium::stringio::{StringErr, StringIn, StringOut};
+    use runnel::RunnelIoe;
+    use std::io::Write;
+    //
+    #[test]
+    fn test_query_locale() {
+        let (r, sioe) = do_execute!(&["--query", "locale"], "");
+        assert_eq!(buff!(sioe, serr), "");
+        assert!(buff!(sioe, sout).contains("en"));
+        assert!(buff!(sioe, sout).contains("fr"));
+        assert!(buff!(sioe, sout).contains("de"));
+        assert!(r.is_ok());
+    }
+    //
+    #[test]
+    fn test_query_invalid() {
+        let (r, sioe) = do_execute!(&["--query", "invalid"], "");
+        assert_eq!(buff!(sioe, serr), "");
+        assert_eq!(
+            buff!(sioe, sout),
+            "unknown query: invalid\navailable query: locale\n"
+        );
+        assert!(r.is_ok());
+        // unknown query: invalid
+        // available query: locale
+        //assert!(buff!(sioe, serr).contains("unknown query: invalid"));
+        //assert_eq!(buff!(sioe, sout), "");
+        //assert!(r.is_err());
+    }
+}
+
+mod test_4_with_fixtures {
+    use libaki_stats::*;
+    use runnel::medium::stringio::{StringErr, StringIn, StringOut};
+    use runnel::RunnelIoe;
+    use std::io::Write;
+    //
+    #[test]
+    fn test_sample_text_all() {
+        let content = std::fs::read_to_string(fixture_sample_text!()).unwrap();
+        let (r, sioe) = do_execute!(&["-a"], &content);
+        assert_eq!(buff!(sioe, serr), "");
+        assert_eq!(
+            buff!(sioe, sout),
+            "lines:\"10\", bytes:\"120\", chars:\"120\", words:\"10\", max:\"12\"\n"
+        );
+        assert!(r.is_ok());
+    }
+    //
+    #[test]
+    fn test_sherlock_text_all() {
+        let content = std::fs::read_to_string(fixture_sherlock!()).unwrap();
+        let (r, sioe) = do_execute!(&["-a"], &content);
+        assert_eq!(buff!(sioe, serr), "");
+        assert_eq!(
+            buff!(sioe, sout),
+            "lines:\"26\", bytes:\"1207\", chars:\"1207\", words:\"226\", max:\"83\"\n"
+        );
+        assert!(r.is_ok());
+    }
+}
+
+mod test_4_with_locale {
+    use libaki_stats::*;
+    use runnel::medium::stringio::{StringErr, StringIn, StringOut};
+    use runnel::RunnelIoe;
+    use std::io::Write;
+    //
+    #[test]
+    fn test_unicode_chars() {
+        let input = "こんにちは 世界\n"; // Hello world in Japanese
+        let (r, sioe) = do_execute!(&["-a"], input);
+        assert_eq!(buff!(sioe, serr), "");
+        // "こんにちは" is 5 chars (15 bytes), " " is 1 char (1 byte), "世界" is 2 chars (6 bytes), "\n" is 1 char (1 byte)
+        // total chars: 5 + 1 + 2 + 1 = 9
+        // total bytes: 15 + 1 + 6 + 1 = 23
+        // words: 2
+        // lines: 1
+        // max line length: 23
+        assert_eq!(
+            buff!(sioe, sout),
+            "lines:\"1\", bytes:\"22\", chars:\"8\", words:\"2\", max:\"22\"\n"
+        );
+        assert!(r.is_ok());
+    }
+    //
+    #[test]
+    fn test_bytes_with_locale() {
+        let input = "a".repeat(1234);
+        let (r, sioe) = do_execute!(&["-b", "--locale", "en"], &input);
+        assert_eq!(buff!(sioe, serr), "");
+        assert_eq!(buff!(sioe, sout), "bytes:\"1,234\"\n");
+        assert!(r.is_ok());
+    }
+    //
+    #[test]
+    fn test_chars_with_locale() {
+        let input = "a".repeat(5678);
+        let (r, sioe) = do_execute!(&["-c", "--locale", "fr"], &input);
+        assert_eq!(buff!(sioe, serr), "");
+        assert_eq!(
+            buff!(sioe, sout),
+            "chars:\"5\u{202f}678\"\n" // French locale uses a narrow non-breaking space
         );
         assert!(r.is_ok());
     }
