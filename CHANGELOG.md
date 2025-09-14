@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 * `specs`
+* more tests
 
 ### Changed
 * `IntoIterator` compatibility for args in `execute()`
@@ -15,11 +16,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * updated: rust-version-info-file(0.2)
 * minimum support: rustc 1.65.0
 * refactored: `run.rs`
+* refactored `lib.rs`
 
 ### Fixed
 * `clippy::derivable_impls`
 * `clippy::useless_format`
 * minimum support version in doc
+
+### Removed
+* `base_dir=` of `-X` options
 
 ## [0.1.18] (2024-06-19)
 ### Added

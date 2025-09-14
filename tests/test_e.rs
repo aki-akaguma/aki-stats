@@ -3,7 +3,10 @@ const TARGET_EXE_PATH: &str = env!(concat!("CARGO_BIN_EXE_", env!("CARGO_PKG_NAM
 #[macro_use]
 mod helper;
 
-mod test_0 {
+#[macro_use]
+mod helper_e;
+
+mod test_0_e {
     use exec_target::exec_target;
     const TARGET_EXE_PATH: &str = super::TARGET_EXE_PATH;
     //
@@ -69,7 +72,7 @@ mod test_0 {
     }
 }
 
-mod test_0_x_options {
+mod test_0_x_options_e {
     use exec_target::exec_target;
     const TARGET_EXE_PATH: &str = super::TARGET_EXE_PATH;
     //
@@ -77,8 +80,7 @@ mod test_0_x_options {
     fn test_x_option_help() {
         let oup = exec_target(TARGET_EXE_PATH, ["-X", "help"]);
         assert_eq!(oup.stderr, "");
-        assert!(oup.stdout.contains("Options:"));
-        assert!(oup.stdout.contains("-X rust-version-info"));
+        assert_eq!(oup.stdout, x_help_msg!());
         assert!(oup.status.success());
     }
     //
@@ -101,7 +103,7 @@ mod test_0_x_options {
     }
 }
 
-mod test_1 {
+mod test_1_e {
     use exec_target::exec_target;
     use exec_target::exec_target_with_in;
     const TARGET_EXE_PATH: &str = super::TARGET_EXE_PATH;
@@ -125,13 +127,7 @@ mod test_1 {
     //
     #[test]
     fn test_invalid_utf8() {
-        let v = {
-            use std::io::Read;
-            let mut f = std::fs::File::open(fixture_invalid_utf8!()).unwrap();
-            let mut v = Vec::new();
-            f.read_to_end(&mut v).unwrap();
-            v
-        };
+        let v = std::fs::read(fixture_invalid_utf8!()).unwrap();
         let oup = exec_target_with_in(TARGET_EXE_PATH, ["-l"], &v);
         assert_eq!(
             oup.stderr,
@@ -286,7 +282,7 @@ which is always far more daring than any effort of the imagination.
 A proposition which I took the liberty of doubting.
 ";
 
-mod test_1_more {
+mod test_1_more_e {
     use exec_target::exec_target_with_in;
     const TARGET_EXE_PATH: &str = super::TARGET_EXE_PATH;
     //
@@ -342,7 +338,7 @@ mod test_1_more {
     }
 }
 
-mod test_2 {
+mod test_2_e {
     use exec_target::exec_target_with_in;
     const TARGET_EXE_PATH: &str = super::TARGET_EXE_PATH;
     //
@@ -392,7 +388,7 @@ mod test_2 {
     }
 }
 
-mod test_4_query_locale {
+mod test_4_query_locale_e {
     use exec_target::exec_target;
     const TARGET_EXE_PATH: &str = super::TARGET_EXE_PATH;
     //
@@ -423,7 +419,7 @@ mod test_4_query_locale {
     }
 }
 
-mod test_4_with_fixtures {
+mod test_4_with_fixtures_e {
     use exec_target::exec_target_with_in;
     const TARGET_EXE_PATH: &str = super::TARGET_EXE_PATH;
     //
@@ -452,7 +448,7 @@ mod test_4_with_fixtures {
     }
 }
 
-mod test_4_with_locale {
+mod test_4_with_locale_e {
     use exec_target::exec_target_with_in;
     const TARGET_EXE_PATH: &str = super::TARGET_EXE_PATH;
     //

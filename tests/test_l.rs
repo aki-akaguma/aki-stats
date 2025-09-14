@@ -1,86 +1,45 @@
-/*
-macro_rules! fixture_text10k {
-    () => {
-        "fixtures/text10k.txt"
-    };
-}
-*/
 #[macro_use]
 mod helper;
 
-macro_rules! do_execute {
-    ($args:expr) => {
-        do_execute!($args, "")
-    };
-    ($args:expr, $sin:expr) => {{
-        let sioe = RunnelIoe::new(
-            Box::new(StringIn::with_str($sin)),
-            #[allow(clippy::box_default)]
-            Box::new(StringOut::default()),
-            #[allow(clippy::box_default)]
-            Box::new(StringErr::default()),
-        );
-        let program = env!("CARGO_PKG_NAME");
-        let r = execute(&sioe, &program, $args);
-        match r {
-            Ok(_) => {}
-            Err(ref err) => {
-                let _ = sioe
-                    .pg_err()
-                    .lock()
-                    .write_fmt(format_args!("{}: {}\n", program, err));
-            }
-        };
-        (r, sioe)
-    }};
-}
+#[macro_use]
+mod helper_l;
 
-macro_rules! buff {
-    ($sioe:expr, serr) => {
-        $sioe.pg_err().lock().buffer_to_string()
-    };
-    ($sioe:expr, sout) => {
-        $sioe.pg_out().lock().buffer_to_string()
-    };
-}
-
-mod test_0_s {
+mod test_0_l {
     use libaki_stats::*;
     use runnel::medium::stringio::{StringErr, StringIn, StringOut};
     use runnel::RunnelIoe;
-    use std::io::Write;
     //
     #[test]
     fn test_help() {
-        let (r, sioe) = do_execute!(&["-H"]);
+        let (r, sioe) = do_execute!(["-H"]);
         assert_eq!(buff!(sioe, serr), "");
         assert_eq!(buff!(sioe, sout), help_msg!());
         assert!(r.is_ok());
     }
     #[test]
     fn test_help_long() {
-        let (r, sioe) = do_execute!(&["--help"]);
+        let (r, sioe) = do_execute!(["--help"]);
         assert_eq!(buff!(sioe, serr), "");
         assert_eq!(buff!(sioe, sout), help_msg!());
         assert!(r.is_ok());
     }
     #[test]
     fn test_version() {
-        let (r, sioe) = do_execute!(&["-V"]);
+        let (r, sioe) = do_execute!(["-V"]);
         assert_eq!(buff!(sioe, serr), "");
         assert_eq!(buff!(sioe, sout), version_msg!());
         assert!(r.is_ok());
     }
     #[test]
     fn test_version_long() {
-        let (r, sioe) = do_execute!(&["--version"]);
+        let (r, sioe) = do_execute!(["--version"]);
         assert_eq!(buff!(sioe, serr), "");
         assert_eq!(buff!(sioe, sout), version_msg!());
         assert!(r.is_ok());
     }
     #[test]
     fn test_invalid_opt() {
-        let (r, sioe) = do_execute!(&["-z"]);
+        let (r, sioe) = do_execute!(["-z"]);
         assert_eq!(
             buff!(sioe, serr),
             concat!(
@@ -96,7 +55,7 @@ mod test_0_s {
     }
     #[test]
     fn test_non_option() {
-        let (r, sioe) = do_execute!(&[""]);
+        let (r, sioe) = do_execute!([""]);
         #[rustfmt::skip]
         assert_eq!(
             buff!(sioe, serr),
@@ -112,25 +71,16 @@ mod test_0_s {
     }
 }
 
-mod test_0_x_options_s {
+mod test_0_x_options_l {
     use libaki_stats::*;
     use runnel::medium::stringio::*;
     use runnel::*;
     //
     #[test]
-    fn test_x_rust_version_info() {
-        let (r, sioe) = do_execute!(["-X", "rust-version-info"]);
-        assert_eq!(buff!(sioe, serr), "");
-        assert!(!buff!(sioe, sout).is_empty());
-        assert!(r.is_ok());
-    }
-    //
-    #[test]
     fn test_x_option_help() {
         let (r, sioe) = do_execute!(["-X", "help"]);
         assert_eq!(buff!(sioe, serr), "");
-        assert!(buff!(sioe, sout).contains("Options:"));
-        assert!(buff!(sioe, sout).contains("-X rust-version-info"));
+        assert_eq!(buff!(sioe, sout), x_help_msg!());
         assert!(r.is_ok());
     }
     //
@@ -153,11 +103,10 @@ mod test_0_x_options_s {
     }
 }
 
-mod test_1_s {
+mod test_1_l {
     use libaki_stats::*;
     use runnel::medium::stringio::{StringErr, StringIn, StringOut};
     use runnel::RunnelIoe;
-    use std::io::Write;
     //
     #[test]
     fn test_non_option() {
@@ -175,17 +124,11 @@ mod test_1_s {
         assert_eq!(buff!(sioe, sout), "");
         assert!(r.is_err());
     }
-    /*
     #[test]
     fn test_invalid_utf8() {
-        let v = {
-            use std::io::Read;
-            let mut f = std::fs::File::open(fixture_invalid_utf8!()).unwrap();
-            let mut v = Vec::new();
-            f.read_to_end(&mut v).unwrap();
-            v
-        };
-        let (r, sioe) = do_execute!(["-h", "10"], &v);
+        let v = std::fs::read(fixture_invalid_utf8!()).unwrap();
+        let s = unsafe { String::from_utf8_unchecked(v) };
+        let (r, sioe) = do_execute!(["-l"], &s);
         assert_eq!(
             buff!(sioe, serr),
             concat!(program_name!(), ": stream did not contain valid UTF-8\n",)
@@ -193,7 +136,6 @@ mod test_1_s {
         assert_eq!(buff!(sioe, sout), "");
         assert!(r.is_err());
     }
-    */
     //
     #[test]
     fn test_empty_input() {
@@ -340,15 +282,14 @@ which is always far more daring than any effort of the imagination.
 A proposition which I took the liberty of doubting.
 ";
 
-mod test_1_more_s {
+mod test_1_more_l {
     use libaki_stats::*;
     use runnel::medium::stringio::{StringErr, StringIn, StringOut};
     use runnel::RunnelIoe;
-    use std::io::Write;
     //
     #[test]
     fn test_t0() {
-        let (r, sioe) = do_execute!(&["-a"], super::IN_DAT_1);
+        let (r, sioe) = do_execute!(["-a"], super::IN_DAT_1);
         assert_eq!(buff!(sioe, serr), "");
         assert_eq!(
             buff!(sioe, sout),
@@ -359,7 +300,7 @@ mod test_1_more_s {
     //
     #[test]
     fn test_t1() {
-        let (r, sioe) = do_execute!(&["-l"], super::IN_DAT_1);
+        let (r, sioe) = do_execute!(["-l"], super::IN_DAT_1);
         assert_eq!(buff!(sioe, serr), "");
         assert_eq!(buff!(sioe, sout), "lines:\"26\"\n");
         assert!(r.is_ok());
@@ -367,7 +308,7 @@ mod test_1_more_s {
     //
     #[test]
     fn test_t2() {
-        let (r, sioe) = do_execute!(&["-b"], super::IN_DAT_1);
+        let (r, sioe) = do_execute!(["-b"], super::IN_DAT_1);
         assert_eq!(buff!(sioe, serr), "");
         assert_eq!(buff!(sioe, sout), "bytes:\"1207\"\n");
         assert!(r.is_ok());
@@ -375,7 +316,7 @@ mod test_1_more_s {
     //
     #[test]
     fn test_t3() {
-        let (r, sioe) = do_execute!(&["-c"], super::IN_DAT_1);
+        let (r, sioe) = do_execute!(["-c"], super::IN_DAT_1);
         assert_eq!(buff!(sioe, serr), "");
         assert_eq!(buff!(sioe, sout), "chars:\"1207\"\n");
         assert!(r.is_ok());
@@ -383,7 +324,7 @@ mod test_1_more_s {
     //
     #[test]
     fn test_t4() {
-        let (r, sioe) = do_execute!(&["-w"], super::IN_DAT_1);
+        let (r, sioe) = do_execute!(["-w"], super::IN_DAT_1);
         assert_eq!(buff!(sioe, serr), "");
         assert_eq!(buff!(sioe, sout), "words:\"226\"\n");
         assert!(r.is_ok());
@@ -391,22 +332,21 @@ mod test_1_more_s {
     //
     #[test]
     fn test_t5() {
-        let (r, sioe) = do_execute!(&["-l", "-m"], super::IN_DAT_1);
+        let (r, sioe) = do_execute!(["-l", "-m"], super::IN_DAT_1);
         assert_eq!(buff!(sioe, serr), "");
         assert_eq!(buff!(sioe, sout), "lines:\"26\", max:\"83\"\n");
         assert!(r.is_ok());
     }
 }
 
-mod test_2_s {
+mod test_2_l {
     use libaki_stats::*;
     use runnel::medium::stringio::{StringErr, StringIn, StringOut};
     use runnel::RunnelIoe;
-    use std::io::Write;
     //
     #[test]
     fn test_t0_en() {
-        let (r, sioe) = do_execute!(&["-a", "--locale", "en"], super::IN_DAT_1);
+        let (r, sioe) = do_execute!(["-a", "--locale", "en"], super::IN_DAT_1);
         assert_eq!(buff!(sioe, serr), "");
         assert_eq!(
             buff!(sioe, sout),
@@ -417,7 +357,7 @@ mod test_2_s {
     //
     #[test]
     fn test_t0_fr() {
-        let (r, sioe) = do_execute!(&["-a", "--locale", "fr"], super::IN_DAT_1);
+        let (r, sioe) = do_execute!(["-a", "--locale", "fr"], super::IN_DAT_1);
         assert_eq!(buff!(sioe, serr), "");
         assert_eq!(
             buff!(sioe, sout),
@@ -428,7 +368,7 @@ mod test_2_s {
     //
     #[test]
     fn test_t0_de() {
-        let (r, sioe) = do_execute!(&["-a", "--locale", "de"], super::IN_DAT_1);
+        let (r, sioe) = do_execute!(["-a", "--locale", "de"], super::IN_DAT_1);
         assert_eq!(buff!(sioe, serr), "");
         assert_eq!(
             buff!(sioe, sout),
@@ -438,15 +378,14 @@ mod test_2_s {
     }
 }
 
-mod test_4_query_locale {
+mod test_4_query_locale_l {
     use libaki_stats::*;
     use runnel::medium::stringio::{StringErr, StringIn, StringOut};
     use runnel::RunnelIoe;
-    use std::io::Write;
     //
     #[test]
     fn test_query_locale() {
-        let (r, sioe) = do_execute!(&["--query", "locale"], "");
+        let (r, sioe) = do_execute!(["--query", "locale"], "");
         assert_eq!(buff!(sioe, serr), "");
         assert!(buff!(sioe, sout).contains("en"));
         assert!(buff!(sioe, sout).contains("fr"));
@@ -456,7 +395,7 @@ mod test_4_query_locale {
     //
     #[test]
     fn test_query_invalid() {
-        let (r, sioe) = do_execute!(&["--query", "invalid"], "");
+        let (r, sioe) = do_execute!(["--query", "invalid"], "");
         assert_eq!(buff!(sioe, serr), "");
         assert_eq!(
             buff!(sioe, sout),
@@ -471,16 +410,15 @@ mod test_4_query_locale {
     }
 }
 
-mod test_4_with_fixtures {
+mod test_4_with_fixtures_l {
     use libaki_stats::*;
     use runnel::medium::stringio::{StringErr, StringIn, StringOut};
     use runnel::RunnelIoe;
-    use std::io::Write;
     //
     #[test]
     fn test_sample_text_all() {
         let content = std::fs::read_to_string(fixture_sample_text!()).unwrap();
-        let (r, sioe) = do_execute!(&["-a"], &content);
+        let (r, sioe) = do_execute!(["-a"], &content);
         assert_eq!(buff!(sioe, serr), "");
         assert_eq!(
             buff!(sioe, sout),
@@ -492,7 +430,7 @@ mod test_4_with_fixtures {
     #[test]
     fn test_sherlock_text_all() {
         let content = std::fs::read_to_string(fixture_sherlock!()).unwrap();
-        let (r, sioe) = do_execute!(&["-a"], &content);
+        let (r, sioe) = do_execute!(["-a"], &content);
         assert_eq!(buff!(sioe, serr), "");
         assert_eq!(
             buff!(sioe, sout),
@@ -502,16 +440,15 @@ mod test_4_with_fixtures {
     }
 }
 
-mod test_4_with_locale {
+mod test_4_with_locale_l {
     use libaki_stats::*;
     use runnel::medium::stringio::{StringErr, StringIn, StringOut};
     use runnel::RunnelIoe;
-    use std::io::Write;
     //
     #[test]
     fn test_unicode_chars() {
         let input = "こんにちは 世界\n"; // Hello world in Japanese
-        let (r, sioe) = do_execute!(&["-a"], input);
+        let (r, sioe) = do_execute!(["-a"], input);
         assert_eq!(buff!(sioe, serr), "");
         // "こんにちは" is 5 chars (15 bytes), " " is 1 char (1 byte), "世界" is 2 chars (6 bytes), "\n" is 1 char (1 byte)
         // total chars: 5 + 1 + 2 + 1 = 9
@@ -529,7 +466,7 @@ mod test_4_with_locale {
     #[test]
     fn test_bytes_with_locale() {
         let input = "a".repeat(1234);
-        let (r, sioe) = do_execute!(&["-b", "--locale", "en"], &input);
+        let (r, sioe) = do_execute!(["-b", "--locale", "en"], &input);
         assert_eq!(buff!(sioe, serr), "");
         assert_eq!(buff!(sioe, sout), "bytes:\"1,234\"\n");
         assert!(r.is_ok());
@@ -538,7 +475,7 @@ mod test_4_with_locale {
     #[test]
     fn test_chars_with_locale() {
         let input = "a".repeat(5678);
-        let (r, sioe) = do_execute!(&["-c", "--locale", "fr"], &input);
+        let (r, sioe) = do_execute!(["-c", "--locale", "fr"], &input);
         assert_eq!(buff!(sioe, serr), "");
         assert_eq!(
             buff!(sioe, sout),
