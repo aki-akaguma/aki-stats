@@ -139,9 +139,8 @@ pub fn parse_cmdopts(a_prog_name: &str, args: &[&str]) -> Result<CmdOptConf, Opt
             return Err(errs);
         }
     }
-    if conf.opt_query.is_some() {
+    if let Some(s) = conf.opt_query {
         let mut errs = OptParseErrors::new();
-        let s = conf.opt_query.unwrap();
         match s.as_str() {
             "locale" => {
                 errs.push(OptParseError::version_message(&query_locale(

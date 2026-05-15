@@ -10,10 +10,10 @@ impl OptLocaleLoc {
     where
         T: ToString + ToFormattedString,
     {
-        if self.inner.is_none() {
-            v.to_string()
+        if let Some(s) = self.inner {
+            v.to_formatted_string(&s)
         } else {
-            v.to_formatted_string(&self.inner.unwrap())
+            v.to_string()
         }
     }
 }
@@ -39,8 +39,8 @@ impl ::std::str::FromStr for OptLocaleLoc {
 
 impl ::std::fmt::Display for OptLocaleLoc {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        if self.inner.is_some() {
-            write!(f, "{}", self.inner.unwrap().name())
+        if let Some(s) = self.inner {
+            write!(f, "{}", s.name())
         } else {
             write!(f, "C")
         }
