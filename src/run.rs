@@ -141,7 +141,7 @@ fn make_out_s_from_stats(conf: &CmdOptConf, stats: &Stats) -> anyhow::Result<Str
     if conf.flg_max_line_bytes {
         vec.push(my_formatted(conf, "max", stats.max_line_bytes)?);
     }
-    Ok(vec.join(", ").to_string())
+    Ok(vec.join(", "))
 }
 
 fn my_formatted(conf: &CmdOptConf, label: &str, num: u64) -> anyhow::Result<String> {

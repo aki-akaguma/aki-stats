@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * minimum support rustc 1.68.0 (2c8cc3432 2023-03-06)
 
 ### Fixed
+* `clippy::redundant_clone`
+* `clippy::needless_borrow`
 * `clippy::unnecessary_unwrap`
 
 ### Removed
