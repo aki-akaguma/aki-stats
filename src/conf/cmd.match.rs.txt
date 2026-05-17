@@ -22,10 +22,10 @@ match CmdOp::from(nv.opt.num) {
         conf.flg_words = true;
     }
     CmdOp::Locale => {
-        conf.opt_locale = value_to_opt_locale_loc(nv)?;
+        conf.opt_locale = value_to_type::<OptLocaleLoc>(nv)?;
     }
     CmdOp::Query => {
-        conf.opt_query = Some(value_to_string(nv)?);
+        conf.opt_query = Some(value_to_type::<String>(nv)?);
     }
     CmdOp::Help => {
         conf.flg_help = true;
@@ -34,6 +34,6 @@ match CmdOp::from(nv.opt.num) {
         conf.flg_version = true;
     }
     CmdOp::UcX => {
-        conf.opt_uc_x.push(value_to_opt_uc_x_param(nv)?);
+        conf.opt_uc_x.push(value_to_type::<OptUcXParam>(nv)?);
     }
 }
