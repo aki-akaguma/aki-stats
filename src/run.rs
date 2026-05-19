@@ -21,12 +21,11 @@ struct Stats {
 }
 
 struct StatsAscii {
-    ascii: Vec<u64>,
+    ascii: [u64; 128],
 }
 impl StatsAscii {
-    fn new(sz: usize) -> StatsAscii {
-        let v = vec![0; sz];
-        Self { ascii: v }
+    fn new() -> StatsAscii {
+        Self { ascii: [0; 128] }
     }
     fn count_up(&mut self, b: u8) {
         if b < 128 {
@@ -41,24 +40,18 @@ impl StatsAscii {
         }
     }
     fn max(&self) -> u64 {
-        *self.ascii.iter().max().unwrap()
+        *self.ascii.iter().max().unwrap_or(&0)
     }
 }
 impl std::default::Default for StatsAscii {
     fn default() -> Self {
-        Self {
-            ascii: Vec::with_capacity(0),
-        }
+        Self::new()
     }
 }
 
 fn run_0(sioe: &RunnelIoe, conf: &CmdOptConf) -> anyhow::Result<()> {
     let mut stats = Stats::default();
-    let mut map_ascii = if conf.flg_map_ascii {
-        StatsAscii::new(128)
-    } else {
-        StatsAscii::default()
-    };
+    let mut map_ascii = StatsAscii::default();
     // input
     for line in sioe.pg_in().lines() {
         let line_s = line?;

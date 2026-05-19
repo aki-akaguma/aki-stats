@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * document: specify that it is UTF-8 only and that line terminators are not included in the byte count.
 
 ### Changed
+* refactor: change `StatsAscii` from `Vec<u64>` to `[u64; 128]` to avoid heap allocation.
 * update crate: flood-tide(0.2.14), flood-tide-gen(0.2.2)
 * update crate: runnel(0.4.2)
 * minimum support rustc 1.68.0 (2c8cc3432 2023-03-06)
