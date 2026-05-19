@@ -102,14 +102,20 @@ fn run_00(
     if conf.flg_chars || conf.flg_words {
         let mut prev_c: char = ' ';
         for c in line_ss.chars() {
-            stats.char_count += 1;
-            if prev_c.is_ascii_whitespace() && !c.is_ascii_whitespace() {
-                stats.word_count += 1;
+            if conf.flg_chars {
+                stats.char_count += 1;
             }
-            prev_c = c;
+            if conf.flg_words {
+                if prev_c.is_ascii_whitespace() && !c.is_ascii_whitespace() {
+                    stats.word_count += 1;
+                }
+                prev_c = c;
+            }
+            if conf.flg_map_ascii && c.is_ascii() {
+                map_ascii.count_up(c as u8);
+            }
         }
-    }
-    if conf.flg_map_ascii {
+    } else if conf.flg_map_ascii {
         for b in line_ss.as_bytes() {
             map_ascii.count_up(*b);
         }
