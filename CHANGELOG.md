@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+* document: specify that it is UTF-8 only and that line terminators are not included in the byte count.
+
 ### Changed
 * update crate: flood-tide(0.2.14), flood-tide-gen(0.2.2)
 * update crate: runnel(0.4.2)

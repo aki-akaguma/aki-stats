@@ -13,7 +13,15 @@ output the statistics of text, like a wc of linux command.
 ## Features
 
 - output the statistics of text, like a wc of linux command.
-- minimum support rustc 1.65.0 (897e37553 2022-11-02)
+- minimum support rustc 1.68.0 (2c8cc3432 2023-03-06)
+
+## Specifications
+
+### UTF-8 Only Support
+This tool is designed to process **UTF-8 encoded text** only. It does not support binary files or other character encodings. If non-UTF-8 data is encountered, the tool may return an error.
+
+### Byte Count Calculation
+Unlike the standard `wc` command, the byte count (`-b`, `--bytes`) provided by `aki-stats` **excludes line terminators** (such as `\n` or `\r\n`). It represents the total number of bytes of the actual text content within the lines.
 
 ## Command help
 
