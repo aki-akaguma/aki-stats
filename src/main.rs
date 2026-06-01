@@ -2,14 +2,12 @@ use libaki_stats::execute;
 use runnel::RunnelIoeBuilder;
 
 fn main() {
-    let mut env_args: Vec<String> = std::env::args().collect();
-    let _program = env_args.remove(0);
     let program = env!("CARGO_PKG_NAME");
-    let env_args: Vec<&str> = env_args.iter().map(String::as_str).collect();
+    let args = std::env::args().skip(1);
     //
     let sioe = RunnelIoeBuilder::new().build();
     //
-    if let Err(err) = execute(&sioe, program, env_args) {
+    if let Err(err) = execute(&sioe, program, args) {
         let _ = sioe.pg_err().write_line(format!("{program}: {err:#}"));
         std::process::exit(1);
     };
