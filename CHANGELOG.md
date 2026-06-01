@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 * document: move existing code reviews to `docs/reviews/` and rename with dated filenames.
+* refactor: simplify vector iteration in `run.rs` to use a `for` loop instead of `reverse()` and `pop()`.
 
 
 ## [0.2.1] (2026-05-20)

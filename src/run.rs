@@ -70,9 +70,7 @@ fn run_0(sioe: &RunnelIoe, conf: &CmdOptConf) -> anyhow::Result<()> {
             let out_s = make_out_s_from_map_ascii_1(&map_ascii)?;
             sioe.pg_out().write_line(out_s)?;
         } else {
-            let mut vec = make_out_s_from_map_ascii_2(&map_ascii)?;
-            vec.reverse();
-            while let Some(v) = vec.pop() {
+            for v in make_out_s_from_map_ascii_2(&map_ascii)? {
                 sioe.pg_out().write_line(v)?;
             }
         }
