@@ -2,211 +2,181 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 ### Added
-* document: add code review results for 2026-06-01.
+- Code review results for 2026-06-01
 
 ### Changed
-* document: move existing code reviews to `docs/reviews/` and rename with dated filenames.
-* refactor: simplify vector iteration in `run.rs` to use a `for` loop instead of `reverse()` and `pop()`.
-* refactor: simplify argument handling in `main.rs` to use `std::env::args().skip(1)`.
+- Move existing code reviews to `docs/reviews/` and rename with dated filenames
+- Simplify vector iteration in `run.rs` to use a `for` loop instead of `reverse()` and `pop()`
+- Simplify argument handling in `main.rs` to use `std::env::args().skip(1)`
 
-
-## [0.2.1] (2026-05-20)
+## [0.2.1] - 2026-05-20
 ### Added
-* document: specify that it is UTF-8 only and that line terminators are not included in the byte count.
+- Clarification that input is UTF-8 only and line terminators are excluded from byte count
 
 ### Changed
-* refactor: consolidate multiple loops in `run_00` into a single pass.
-* refactor: change `StatsAscii` from `Vec<u64>` to `[u64; 128]` to avoid heap allocation.
-* update crate: flood-tide(0.2.14), flood-tide-gen(0.2.2)
-* update crate: runnel(0.4.2)
-* minimum support rustc 1.68.0 (2c8cc3432 2023-03-06)
+- Consolidate multiple loops in `run_00` into a single pass
+- Use `[u64; 128]` for `StatsAscii` instead of `Vec<u64>` to avoid heap allocation
+- Update dependencies: `flood-tide` (0.2.14), `flood-tide-gen` (0.2.2), `runnel` (0.4.2)
+- Increase minimum supported Rust version (MSRV) to 1.68.0
 
 ### Fixed
-* `clippy::redundant_clone`
-* `clippy::needless_borrow`
-* `clippy::unnecessary_unwrap`
+- Clippy warnings: `redundant_clone`, `needless_borrow`, `unnecessary_unwrap`
 
 ### Removed
-* `memx-cdy`
+- `memx-cdy` dependency
 
-## [0.2.0] (2025-09-15)
+## [0.2.0] - 2025-09-15
 ### Added
-* `specs`
-* more tests
+- `specs` directory
+- More tests
 
 ### Changed
-* `IntoIterator` compatibility for args in `execute()`
-* updated: runnel(0.4.0)
-* updated: rust-version-info-file(0.2)
-* minimum support: rustc 1.65.0
-* refactored: `run.rs`
-* refactored `lib.rs`
+- Implement `IntoIterator` compatibility for arguments in `execute()`
+- Update dependencies: `runnel` (0.4.0), `rust-version-info-file` (0.2)
+- Increase MSRV to 1.65.0
+- Refactor `run.rs` and `lib.rs`
 
 ### Fixed
-* `clippy::derivable_impls`
-* `clippy::useless_format`
-* minimum support version in doc
+- Clippy warnings: `derivable_impls`, `useless_format`
+- MSRV documentation
 
 ### Removed
-* `base_dir=` of `-X` options
+- `base_dir=` from `-X` options
 
-## [0.1.18] (2024-06-19)
+## [0.1.18] - 2024-06-19
 ### Added
-* `.github/workflows/test-ubuntu.yml`
-* `.github/workflows/test-macos.yml`
-* `.github/workflows/test-windows.yml`
-* test status badges into `README.tpl`
-* miri supports on tests
-* `tarpaulin` supports into `Makefile`
+- GitHub Actions workflows for Ubuntu, macOS, and Windows
+- Test status badges in `README.tpl`
+- Miri support for tests
+- Tarpaulin support in `Makefile`
 
 ### Changed
-* rename: `config` to `config.toml`
-* remove: `cfg(has_not_matches)`
-* refactored `Makefile`
-* update depends: flood-tide(0.2.9), flood-tide-gen(0.1.20)
-* update depends: memx-cdy(0.1.11), runnel(0.3.16)
-* update depends: exec-taget(0.2.8), indoc(2.0.5), rust-version-info-file(0.1.8)
+- Rename `config` to `config.toml`
+- Remove `cfg(has_not_matches)`
+- Refactor `Makefile`
+- Update dependencies: `flood-tide` (0.2.9), `flood-tide-gen` (0.1.20), `memx-cdy` (0.1.11), `runnel` (0.3.16), `exec-target` (0.2.8), `indoc` (2.0.5), `rust-version-info-file` (0.1.8)
+
+### Fixed
+- `LICENSE-APACHE` and `LICENSE-MIT` files
+- Clippy warnings: `redundant_static_lifetimes`, `needless_borrow`, `bool_assert_comparison`, `uninlined_format_args`, `unused_imports`
+- Correct Rust version from "1.56.0" to "1.60.0"
 
 ### Removed
-* `COPYING`
+- `COPYING` file
+
+## [0.1.17] - 2023-01-11
+### Added
+- Badges in `README.tpl`
+- MSRV (1.56.0) in `Cargo.toml`
+
+### Changed
+- Reformat `CHANGELOG.md`
+- Update dependencies: `anyhow` (1.0.68), `flood-tide` (0.2.8), `flood-tide-gen` (0.1.19), `memx-cdy` (0.1.10), `runnel` (0.3.15), `num-format` (0.4.4)
 
 ### Fixed
-* `LICENSE-APACHE`, `LICENSE-MIT`
-* license files
-* clippy: `redundant_static_lifetimes`, `needless_borrow`, `bool_assert_comparison`
-* clippy: `uninlined_format_args`, `unused_imports`
-* rust-version: "1.56.0" to "1.60.0"
+- Clippy warnings: `Eq` implementation for `PartialEq`, `uninlined_format_args`
 
-## [0.1.17] (2023-01-11)
+## [0.1.16] - 2022-06-18
+### Changed
+- Migrate to Rust 2021 edition
+- Update dependencies: `flood-tide` (0.2.5), `memx` (0.1.21), `memx-cdy` (0.1.8), `runnel` (0.3.11), `exec-target` (0.2.6), `flood-tide-gen` (0.1.16), `rust-version-info-file` (0.1.6), `semver` (1.0.10)
+
+## [0.1.15] - 2022-05-22
+### Changed
+- Update dependencies: `runnel` (0.3.10), `memx` (0.1.20), `anyhow` (1.0.57), `libc` (0.2.126), `regex` (1.5.6), `exec-target` (0.2.5), `rust-version-info-file` (0.1.5)
+
+## [0.1.14] - 2021-11-15
 ### Added
-* badges into `README.tpl`
-* rust-version = "1.56.0" into Cargo.toml
+- Documentation improvements
 
 ### Changed
-* reformat `CHANGELOG.md`
-* update depends: anyhow(1.0.68)
-* update depends: flood-tide(0.2.8), flood-tide-gen(0.1.19)
-* update depends: memx-cdy(0.1.10), runnel(0.3.15)
-* update depends: num-format(0.4.4)
+- Increase MSRV to 1.47.0
+- Update dependencies: `flood-tide` (0.2.4), `memx` (0.1.18), `memx-cdy` (0.1.7), `runnel` (0.3.9), `anyhow` (1.0.45), `libc` (0.2.107), `exec-target` (0.2.4), `flood-tide-gen` (0.1.15), `rust-version-info-file` (0.1.3)
+
+## [0.1.13] - 2021-09-11
+### Added
+- Dependency: `indoc` (1.0.3)
+
+### Changed
+- Address Clippy warnings
+- Update dependencies: `anyhow` (1.0.43), `flood-tide-gen` (0.1.14), `flood-tide` (0.2.3), `memx-cdy` (0.1.6), `runnel` (0.3.8), `exec-target` (0.2.3)
+- Rewrite `TARGET_EXE_PATH` using `env!` macros
+
+## [0.1.12] - 2021-06-24
+### Added
+- Initialization of `memx_cdy` for faster memory operations
+
+### Changed
+- Rewrite `TARGET_EXE_PATH` using `env!` macro
 
 ### Fixed
-* clippy: you are deriving `PartialEq` and can implement `Eq`
-* clippy: uninlined_format_args
+- Bug in `#[cfg(feature = "debian_build")]`
 
-## [0.1.16] (2022-06-18)
-### Changed
-* changes to edition 2021
-* update depends: flood-tide(0.2.5)
-* update depends: memx(0.1.21), memx-cdy(0.1.8), runnel(0.3.11)
-* update depends: exec-target(v0.2.6), flood-tide-gen(0.1.16)
-* update depends: rust-version-info-file(v0.1.6)
-* update depends: semver(1.0.10)
-
-## [0.1.15] (2022-05-22)
-### Changed
-* update depends: runnel(0.3.10), memx(0.1.20)
-* update depends: anyhow(1.0.57), libc(0.2.126), regex(1.5.6)
-* update depends: exec-target(v0.2.5), rust-version-info-file(v0.1.5)
-
-## [0.1.14] (2021-11-15)
+## [0.1.11] - 2021-06-05
 ### Added
-* more documents
+- Command options: `--map-ascii` and `-X map-ascii-rust-src`
 
-### Changed
-* minimum support rustc 1.47.0 (18bf6b4f0 2020-10-07)
-* update depends: flood-tide(0.2.4), memx(0.1.18), memx-cdy(0.1.7), runnel(0.3.9)
-* update depends: anyhow(1.0.45), libc(0.2.107)
-* update depends: exec-target(v0.2.4), flood-tide-gen(0.1.15), rust-version-info-file(v0.1.3)
-
-## [0.1.13] (2021-09-11)
+## [0.1.10] - 2021-06-03
 ### Added
-* depends: indoc(1.0.3)
+- Support for `debian_build` feature
 
 ### Changed
-* pass cargo clippy
-* update depends: anyhow(1.0.43), flood-tide-gen(0.1.14), flood-tide(0.2.3), memx-cdy(0.1.6), runnel(0.3.8)
-* rewite TARGET_EXE_PATH with `env!(concat!("CARGO_BIN_EXE_", env!("CARGO_PKG_NAME")))`
-* update depends: exec-target(0.2.3)
-
-## [0.1.12] (2021-06-24)
-### Added
-* `memx_cdy::memx_init(); // fast mem operation.`
-
-### Changed
-* rewite TARGET_EXE_PATH with `env!("CARGO_BIN_EXE_aki-stats")`
+- Update dependencies: `flood-tide` (0.2.2), `regex` (1.5.4)
 
 ### Fixed
-* bug: `#[cfg(feature = "debian_build")]`
+- Bug in command option `-X rust-version-info`
 
-## [0.1.11] (2021-06-05)
-### Added
-* command option: `--map-ascii` and `-X map-ascii-rust-src`
-
-## [0.1.10] (2021-06-03)
-### Added
-* support `features = \["debian_build"\]`
-
-### Changed
-* update depends: flood-tide(0.2.2)
-* update depends: regex(1.5.4)
-
+## [0.1.9] - 2021-04-23
 ### Fixed
-* bug: command option: `-X rust-version-info`
+- Bug in `build.rs`
 
-## [0.1.9] (2021-04-23)
-### Fixed
-* bug: build.rs
-
-## [0.1.8] (2021-04-23)
+## [0.1.8] - 2021-04-23
 ### Added
-* command option: `-X`
+- Command option: `-X`
 
 ### Changed
-* update depends: flood-tide-gen(0.1.12), flood-tide(0.2.1)
-* update depends: bug fix: regex(1.4.6)
+- Update dependencies: `flood-tide-gen` (0.1.12), `flood-tide` (0.2.1), `regex` (1.4.6)
 
-## [0.1.7] (2021-04-19)
+## [0.1.7] - 2021-04-19
 ### Changed
-* update depends: flood-tide-gen(0.1.10)
+- Update dependency: `flood-tide-gen` (0.1.10)
 
-## [0.1.6] (2021-04-07)
+## [0.1.6] - 2021-04-07
 ### Changed
-* update depends: flood-tide(0.2)
-* update depends: anyhow(1.0.40), flood-tide-gen(0.1.8), runnnel(0.3.6)
+- Update dependencies: `flood-tide` (0.2), `anyhow` (1.0.40), `flood-tide-gen` (0.1.8), `runnel` (0.3.6)
 
-## [0.1.5] (2021-03-22)
+## [0.1.5] - 2021-03-22
 ### Fixed
-* depends: unnecessary regex
+- Unnecessary dependency on `regex`
 
-## [0.1.4] (2021-03-14)
+## [0.1.4] - 2021-03-14
 ### Changed
-* update crate: regex: fix memory leak
+- Update `regex` to fix memory leak
 
-## [0.1.3] (2021-03-08)
+## [0.1.3] - 2021-03-08
 ### Changed
-* update crate: runnel
-* update crate: rustc_version ("0.3")
+- Update dependencies: `runnel`, `rustc_version` (0.3)
 
-## [0.1.2] (2021-03-08)
+## [0.1.2] - 2021-03-08
 ### Changed
-* update crate: runnel
-* rename file: `xtask/src/cmd.txt` to `xtask/src/aki-stats-cmd.txt`
+- Update dependency: `runnel`
+- Rename `xtask/src/cmd.txt` to `xtask/src/aki-stats-cmd.txt`
 
-## [0.1.1] (2021-03-04)
+## [0.1.1] - 2021-03-04
 ### Added
-* command option: `--locale <loc>`
-* command option: `-?, --query <q>`
+- Command options: `--locale <loc>`, `-?`, `--query <q>`
 
 ### Changed
-* change output plain numeric to locale numeric, fancy numeric format
+- Format numeric output using locale-specific settings
 
-## [0.1.0] (2021-03-03)
-* first commit
+## [0.1.0] - 2021-03-03
+### Added
+- Initial release
 
 [Unreleased]: https://github.com/aki-akaguma/aki-stats/compare/v0.2.1..HEAD
 [0.2.1]: https://github.com/aki-akaguma/aki-stats/compare/v0.2.0..v0.2.1
