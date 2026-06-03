@@ -1,5 +1,4 @@
 # Changelog: aki-stats
-
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
@@ -7,16 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- Code review results for 2026-06-01
+- Document code review results for 2026-06-01
 
 ### Changed
-- Move existing code reviews to `docs/reviews/` and rename with dated filenames
-- Simplify vector iteration in `run.rs` to use a `for` loop instead of `reverse()` and `pop()`
-- Simplify argument handling in `main.rs` to use `std::env::args().skip(1)`
+- Relocate code reviews to `docs/reviews/` and use dated filenames
+- Simplify vector iteration in `run.rs` (use `for` loop instead of `reverse()` and `pop()`)
+- Simplify argument handling in `main.rs` (use `std::env::args().skip(1)`)
 
 ## [0.2.1] - 2026-05-20
 ### Added
-- Clarification that input is UTF-8 only and line terminators are excluded from byte count
+- Clarify that input is UTF-8 only and line terminators are excluded from byte count
 
 ### Changed
 - Consolidate multiple loops in `run_00` into a single pass
@@ -25,14 +24,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Increase minimum supported Rust version (MSRV) to 1.68.0
 
 ### Fixed
-- Clippy warnings: `redundant_clone`, `needless_borrow`, `unnecessary_unwrap`
+- Address Clippy warnings: `redundant_clone`, `needless_borrow`, `unnecessary_unwrap`
 
 ### Removed
 - `memx-cdy` dependency
 
 ## [0.2.0] - 2025-09-15
 ### Added
-- `specs` directory
+- Create `specs` directory
 - More tests
 
 ### Changed
@@ -42,18 +41,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactor `run.rs` and `lib.rs`
 
 ### Fixed
-- Clippy warnings: `derivable_impls`, `useless_format`
-- MSRV documentation
+- Resolve Clippy warnings: `derivable_impls`, `useless_format`
+- Clarify MSRV documentation
 
 ### Removed
-- `base_dir=` from `-X` options
+- Remove `base_dir=` from `-X` options
 
 ## [0.1.18] - 2024-06-19
 ### Added
-- GitHub Actions workflows for Ubuntu, macOS, and Windows
+- Implement GitHub Actions workflows for Ubuntu, macOS, and Windows
 - Test status badges in `README.tpl`
-- Miri support for tests
-- Tarpaulin support in `Makefile`
+- Enable Miri support for tests
+- Support Tarpaulin in `Makefile`
 
 ### Changed
 - Rename `config` to `config.toml`
@@ -62,24 +61,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update dependencies: `flood-tide` (0.2.9), `flood-tide-gen` (0.1.20), `memx-cdy` (0.1.11), `runnel` (0.3.16), `exec-target` (0.2.8), `indoc` (2.0.5), `rust-version-info-file` (0.1.8)
 
 ### Fixed
-- `LICENSE-APACHE` and `LICENSE-MIT` files
-- Clippy warnings: `redundant_static_lifetimes`, `needless_borrow`, `bool_assert_comparison`, `uninlined_format_args`, `unused_imports`
-- Correct Rust version from "1.56.0" to "1.60.0"
+- Update `LICENSE-APACHE` and `LICENSE-MIT` files
+- Resolve Clippy warnings: `redundant_static_lifetimes`, `needless_borrow`, `bool_assert_comparison`, `uninlined_format_args`, `unused_imports`
+- Correct MSRV from "1.56.0" to "1.60.0"
 
 ### Removed
-- `COPYING` file
+- Remove `COPYING` file
 
 ## [0.1.17] - 2023-01-11
 ### Added
 - Badges in `README.tpl`
-- MSRV (1.56.0) in `Cargo.toml`
+- Define MSRV (1.56.0) in `Cargo.toml`
 
 ### Changed
 - Reformat `CHANGELOG.md`
 - Update dependencies: `anyhow` (1.0.68), `flood-tide` (0.2.8), `flood-tide-gen` (0.1.19), `memx-cdy` (0.1.10), `runnel` (0.3.15), `num-format` (0.4.4)
 
 ### Fixed
-- Clippy warnings: `Eq` implementation for `PartialEq`, `uninlined_format_args`
+- Resolve Clippy warnings: `Eq` implementation for `PartialEq`, `uninlined_format_args`
 
 ## [0.1.16] - 2022-06-18
 ### Changed
@@ -92,7 +91,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1.14] - 2021-11-15
 ### Added
-- Documentation improvements
+- Improve documentation
 
 ### Changed
 - Increase MSRV to 1.47.0
@@ -109,13 +108,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1.12] - 2021-06-24
 ### Added
-- Initialization of `memx_cdy` for faster memory operations
+- Initialize `memx_cdy` for faster memory operations
 
 ### Changed
 - Rewrite `TARGET_EXE_PATH` using `env!` macro
 
 ### Fixed
-- Bug in `#[cfg(feature = "debian_build")]`
+- Fix bug in `#[cfg(feature = "debian_build")]`
 
 ## [0.1.11] - 2021-06-05
 ### Added
@@ -123,17 +122,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1.10] - 2021-06-03
 ### Added
-- Support for `debian_build` feature
+- Support `debian_build` feature
 
 ### Changed
 - Update dependencies: `flood-tide` (0.2.2), `regex` (1.5.4)
 
 ### Fixed
-- Bug in command option `-X rust-version-info`
+- Fix bug in command option `-X rust-version-info`
 
 ## [0.1.9] - 2021-04-23
 ### Fixed
-- Bug in `build.rs`
+- Fix bug in `build.rs`
 
 ## [0.1.8] - 2021-04-23
 ### Added
@@ -152,11 +151,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1.5] - 2021-03-22
 ### Fixed
-- Unnecessary dependency on `regex`
+- Remove unnecessary dependency on `regex`
 
 ## [0.1.4] - 2021-03-14
 ### Changed
-- Update `regex` to fix memory leak
+- Update `regex` to resolve memory leak
 
 ## [0.1.3] - 2021-03-08
 ### Changed
